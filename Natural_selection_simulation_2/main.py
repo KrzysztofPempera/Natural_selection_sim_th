@@ -19,7 +19,7 @@ screen.blit(bg.image, bg.rect)
 
 objectIndex = 10
 food = [crt.carrot(screen, 1, WIDTH - 11, 1, HEIGHT - 11) for i in range (2)]
-rabbit = rb.rabbit(screen, objectIndex, 250, 250, 10, 10)
+rabbits = [rb.rabbit(screen, objectIndex, 250, 250, 10, 10) for i in range(50)]
 
 
 turn = 1
@@ -28,7 +28,8 @@ def drawScreen(surface):
 
     for carrot in food:
         surface.blit(carrot.image, carrot.rect)
-    surface.blit(rabbit.image, rabbit.rect)
+    for rabbit in rabbits:
+        surface.blit(rabbit.image, rabbit.rect)
 
     pg.display.update()
 
@@ -39,7 +40,8 @@ def main():
         
         clock.tick(SPEED)
 
-        rabbit.move(bg.image)
+        for rabbit in rabbits:
+            rabbit.move(bg.image)
 
         drawScreen(screen)
 

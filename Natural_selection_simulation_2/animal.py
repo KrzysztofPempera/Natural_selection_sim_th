@@ -12,7 +12,7 @@ class animal(object):
         self.ms = movementspeed
 
         self.eat = False
-        self.wandering = False
+        self.wandering = True
         self.velocity = (0,0)
         self.target = True
         self.oldPosition = (-1,-1)
