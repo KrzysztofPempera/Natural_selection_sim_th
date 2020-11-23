@@ -14,7 +14,7 @@ class animal(object):
         self.eat = False
         self.wandering = True
         self.velocity = (0,0)
-        self.target = True
+        self.target = object
         self.oldPosition = (-1,-1)
         self.age = 0
         self.family = -1
@@ -31,7 +31,7 @@ class animal(object):
 
     def createVelocity(self):
         animalPosition = self.getPosition()
-        targetPosition = (2,3)
+        targetPosition = self.target.getPosition()
 
         desired = np.subtract(targetPosition, animalPosition)
 
@@ -39,6 +39,41 @@ class animal(object):
         desired = desired * self.ms
         velocity = (math.ceil(desired[0]),math.ceil(desired[1]))
         return velocity
+
+    def search(self, indexMap):
+        center = self.rect.center
+        sense = self.sense
+        target = -1
+
+        #topleft - topright
+        for i in range(center[0] - sense, center[0] + sense):
+            if indexMap[i][center[1] - sense] != -1:
+                target = indexMap[i][center[1] - sense]
+                return target
+        #topright - bottomright
+        for i in range(center[1] - sense, center[1] + sense):
+            if indexMap[center[0] + sense][i] != -1:
+                target = indexMap[center[0] + sense][i]
+                return target
+        #bottomright - bottomleft
+        for i in range(center[0] + sense, center[0] - sense, -1):
+            if indexMap[i][center[1] + sense] != -1:
+                target = indexMap[i][center[1] + sense]
+                return target
+        #bottomleft - topleft
+        for i in range (center[1] - sense, center[1] + sense):
+            if indexMap[center[0] - sense][i] != -1:
+                target = indexMap[center[0] - sense][i]
+                return target
+        return target
+
+    def seek(self, indexMap, objectsDictionary):
+        target = self.search(indexMap)
+        if target != -1:
+            self.target = objectsDictionary.get(target)
+            self.wandering = False
+        else:
+            self.wandering = True
 
     def getNewPosition(self, position):
         moves = ((0,self.ms),(0,-self.ms),(self.ms,0),(-self.ms,0), (self.ms,self.ms), (self.ms,-self.ms), (-self.ms,self.ms), (-self.ms,-self.ms))
@@ -60,13 +95,15 @@ class animal(object):
             newPosition = self.wanderingDirection()
             self.rect.left = newPosition[0] % 500
             self.rect.top = newPosition[1] % 500
+    
 
-    def move(self, bg):
+    def move(self, bg, indexMap, objectsDictionary):
         if self.wandering == True:
             self.wander()
+            self.seek(indexMap, objectsDictionary)
 
         elif self.wandering == False:
-            if self.target == True:
+            if self.target.dead == False:
                 velocity = self.createVelocity()
                 if velocity[0] == 0 and velocity[1] == 0:
                     self.wandering = True

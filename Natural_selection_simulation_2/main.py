@@ -17,12 +17,19 @@ pg.display.set_caption("Simulation")
 bg = sp.sprite('background.png', [0,0])
 screen.blit(bg.image, bg.rect)
 
-objectIndex = 10
-food = [crt.carrot(screen, 1, WIDTH - 11, 1, HEIGHT - 11) for i in range (2)]
-rabbits = [rb.rabbit(screen, objectIndex, 250, 250, 10, 10) for i in range(50)]
-
-
+objectsIndex = 1
+objectsDictionary = {}
+food = []
+rabbits = []
+indexMap = [[-1 for i in range (500)] for j in range (500)]
 turn = 1
+
+def markMap(object):
+    global indexMap
+
+    for i in range (object.rect.h):
+        for j in range(object.rect.w):
+            indexMap[(object.rect.left + j) % 500][(object.rect.top + i) % 500] = object.index
 
 def drawScreen(surface):
 
@@ -33,15 +40,29 @@ def drawScreen(surface):
 
     pg.display.update()
 
+for i in range(60):
+    carrot = crt.carrot(screen, objectsIndex, 1, WIDTH - 11, 1, HEIGHT - 11)
+    food.append(carrot)
+    objectsDictionary[carrot.index] =  carrot
+    objectsIndex += 1
+    markMap(carrot)
+
+for i in range(1):
+    rabbit = rb.rabbit(screen, objectsIndex, 250, 250, 10, 30)
+    rabbits.append(rabbit)
+    objectsDictionary[rabbit.index] = rabbit
+    objectsIndex += 1
+    markMap(rabbit)
+
 def main():
-    global turn, objectIndex
+    global turn, objectIndex, indexMap, objectsDictionary
     running = True
     while running:
         
         clock.tick(SPEED)
 
         for rabbit in rabbits:
-            rabbit.move(bg.image)
+            rabbit.move(bg.image, indexMap, objectsDictionary)
 
         drawScreen(screen)
 
