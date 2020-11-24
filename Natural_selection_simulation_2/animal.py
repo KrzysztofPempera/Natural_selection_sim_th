@@ -11,6 +11,7 @@ class animal(object):
         self.sense = sense
         self.ms = movementspeed
 
+        self.dead = False
         self.eat = False
         self.wandering = True
         self.velocity = (0,0)
@@ -43,33 +44,33 @@ class animal(object):
     def search(self, indexMap):
         center = self.rect.center
         sense = self.sense
-        target = -1
-
+        target = 'g'
+        ##to fix out of bounds
         #topleft - topright
         for i in range(center[0] - sense, center[0] + sense):
-            if indexMap[i][center[1] - sense] != -1:
+            if indexMap[i][center[1] - sense] != 'g' and indexMap[i][center[1] - sense][0] != 'r':
                 target = indexMap[i][center[1] - sense]
                 return target
         #topright - bottomright
         for i in range(center[1] - sense, center[1] + sense):
-            if indexMap[center[0] + sense][i] != -1:
+            if indexMap[center[0] + sense][i] != 'g' and indexMap[center[0] + sense][i][0] != 'r':
                 target = indexMap[center[0] + sense][i]
                 return target
         #bottomright - bottomleft
         for i in range(center[0] + sense, center[0] - sense, -1):
-            if indexMap[i][center[1] + sense] != -1:
+            if indexMap[i][center[1] + sense] != 'g' and indexMap[i][center[1] + sense][0] != 'r':
                 target = indexMap[i][center[1] + sense]
                 return target
         #bottomleft - topleft
         for i in range (center[1] - sense, center[1] + sense):
-            if indexMap[center[0] - sense][i] != -1:
+            if indexMap[center[0] - sense][i] != 'g' and indexMap[center[0] - sense][i][0] != 'r':
                 target = indexMap[center[0] - sense][i]
                 return target
         return target
 
     def seek(self, indexMap, objectsDictionary):
         target = self.search(indexMap)
-        if target != -1:
+        if target != 'g':
             self.target = objectsDictionary.get(target)
             self.wandering = False
         else:

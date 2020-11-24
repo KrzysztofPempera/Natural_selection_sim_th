@@ -21,7 +21,7 @@ objectsIndex = 1
 objectsDictionary = {}
 food = []
 rabbits = []
-indexMap = [[-1 for i in range (500)] for j in range (500)]
+indexMap = [['g' for i in range (500)] for j in range (500)]
 turn = 1
 
 def markMap(object):
@@ -40,15 +40,17 @@ def drawScreen(surface):
 
     pg.display.update()
 
-for i in range(60):
-    carrot = crt.carrot(screen, objectsIndex, 1, WIDTH - 11, 1, HEIGHT - 11)
+for i in range(2):
+    cIndex = 'c'+ str(objectsIndex)
+    carrot = crt.carrot(screen, cIndex, 1, WIDTH - 11, 1, HEIGHT - 11)
     food.append(carrot)
     objectsDictionary[carrot.index] =  carrot
     objectsIndex += 1
     markMap(carrot)
-
-for i in range(1):
-    rabbit = rb.rabbit(screen, objectsIndex, 250, 250, 10, 30)
+     
+for i in range(50):
+    rIndex = 'r' + str(objectsIndex)
+    rabbit = rb.rabbit(screen, rIndex, 250, 250, 10, 30)
     rabbits.append(rabbit)
     objectsDictionary[rabbit.index] = rabbit
     objectsIndex += 1
