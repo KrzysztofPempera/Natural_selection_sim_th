@@ -45,26 +45,34 @@ class animal(object):
         center = self.rect.center
         sense = self.sense
         target = 'g'
-        ##to fix out of bounds
+        ##to fix diferent species, function, around the world chase?
         #topleft - topright
-        for i in range(center[0] - sense, center[0] + sense):
-            if indexMap[i][center[1] - sense] != 'g' and indexMap[i][center[1] - sense][0] != 'r':
-                target = indexMap[i][center[1] - sense]
+        for i in range((center[0] - sense) % 500, (center[0] + sense) % 500):
+            x = i % 500
+            y = (center[1] - sense) % 500
+            if indexMap[x][y] != 'g' and indexMap[x][y][0] != 'r':
+                target = indexMap[x][y]
                 return target
         #topright - bottomright
-        for i in range(center[1] - sense, center[1] + sense):
-            if indexMap[center[0] + sense][i] != 'g' and indexMap[center[0] + sense][i][0] != 'r':
-                target = indexMap[center[0] + sense][i]
+        for i in range((center[1] - sense) % 500, (center[1] + sense) % 500):
+            x = (center[0] + sense) % 500
+            y = i % 500
+            if indexMap[x][y] != 'g' and indexMap[x][y][0] != 'r':
+                target = indexMap[x][y]
                 return target
         #bottomright - bottomleft
-        for i in range(center[0] + sense, center[0] - sense, -1):
-            if indexMap[i][center[1] + sense] != 'g' and indexMap[i][center[1] + sense][0] != 'r':
-                target = indexMap[i][center[1] + sense]
+        for i in range((center[0] + sense) % 500, (center[0] - sense) % 500, -1):
+            x = i % 500
+            y = (center[1] + sense) % 500
+            if indexMap[x][y] != 'g' and indexMap[x][y][0] != 'r':
+                target = indexMap[x][y]
                 return target
         #bottomleft - topleft
-        for i in range (center[1] - sense, center[1] + sense):
-            if indexMap[center[0] - sense][i] != 'g' and indexMap[center[0] - sense][i][0] != 'r':
-                target = indexMap[center[0] - sense][i]
+        for i in range ((center[1] - sense) % 500, (center[1] + sense) % 500):
+            x = (center[0] - sense) % 500
+            y = i % 500
+            if indexMap[x][y] != 'g' and indexMap[x][y][0] != 'r':
+                target = indexMap[x][y]
                 return target
         return target
 
