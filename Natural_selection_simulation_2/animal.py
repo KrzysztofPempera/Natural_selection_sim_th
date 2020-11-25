@@ -50,29 +50,29 @@ class animal(object):
         for i in range((center[0] - sense) % 500, (center[0] + sense) % 500):
             x = i % 500
             y = (center[1] - sense) % 500
-            if indexMap[x][y] != 'g' and indexMap[x][y][0] != 'r':
-                target = indexMap[x][y]
+            if indexMap[y][x] != 'g' and indexMap[y][x][0] != 'r':
+                target = indexMap[y][x]
                 return target
         #topright - bottomright
         for i in range((center[1] - sense) % 500, (center[1] + sense) % 500):
             x = (center[0] + sense) % 500
             y = i % 500
-            if indexMap[x][y] != 'g' and indexMap[x][y][0] != 'r':
-                target = indexMap[x][y]
+            if indexMap[y][x] != 'g' and indexMap[y][x][0] != 'r':
+                target = indexMap[y][x]
                 return target
         #bottomright - bottomleft
         for i in range((center[0] + sense) % 500, (center[0] - sense) % 500, -1):
             x = i % 500
             y = (center[1] + sense) % 500
-            if indexMap[x][y] != 'g' and indexMap[x][y][0] != 'r':
-                target = indexMap[x][y]
+            if indexMap[y][x] != 'g' and indexMap[y][x][0] != 'r':
+                target = indexMap[y][x]
                 return target
         #bottomleft - topleft
         for i in range ((center[1] - sense) % 500, (center[1] + sense) % 500):
             x = (center[0] - sense) % 500
             y = i % 500
-            if indexMap[x][y] != 'g' and indexMap[x][y][0] != 'r':
-                target = indexMap[x][y]
+            if indexMap[y][x] != 'g' and indexMap[y][x][0] != 'r':
+                target = indexMap[y][x]
                 return target
         return target
 
@@ -83,6 +83,17 @@ class animal(object):
             self.wandering = False
         else:
             self.wandering = True
+
+    def selfScan(self, indexMap):
+        x = self.rect.left
+        y = self.rect.top
+        h = self.rect.h
+
+        for i in range(y, y + h + 1):
+            for j in range(x, x + h +1):
+                if indexMap[i][j] != 'g' and indexMap [i][j][0] != 'r':
+                    return indexMap[i][j]
+        return 'g'
 
     def getNewPosition(self, position):
         moves = ((0,self.ms),(0,-self.ms),(self.ms,0),(-self.ms,0), (self.ms,self.ms), (self.ms,-self.ms), (-self.ms,self.ms), (-self.ms,-self.ms))
@@ -122,7 +133,7 @@ class animal(object):
                     self.rect.left = (self.rect.left + velocity[0]) % 500
                     self.rect.top = (self.rect.top + velocity [1]) % 500
                 
-            elif self.target == True:
+            elif self.target.dead == True:
                 self.wandering = True
                 self.wander()
             

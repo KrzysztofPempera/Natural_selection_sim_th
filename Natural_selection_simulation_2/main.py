@@ -7,7 +7,7 @@ import colours
 
 WIDTH = 500
 HEIGHT = 500
-SPEED = 20
+SPEED = 2
 
 pg.init()
 
@@ -26,13 +26,18 @@ turn = 1
 
 def markMap(object):
     global indexMap
-
     for i in range (object.rect.h):
         for j in range(object.rect.w):
-            indexMap[(object.rect.left + j) % 500][(object.rect.top + i) % 500] = object.index
+            indexMap[(object.rect.top + i) % 500][(object.rect.left + j) % 500] = object.index
+
+def clearMap(x,y,h):
+    global indexMap
+    for i in range (h):
+        for j in range(h):
+            indexMap[(y + i) % 500][(x + j) % 500] = 'g'
 
 def drawScreen(surface):
-
+    screen.blit(bg.image, bg.rect)
     for carrot in food:
         surface.blit(carrot.image, carrot.rect)
     for rabbit in rabbits:
@@ -40,7 +45,7 @@ def drawScreen(surface):
 
     pg.display.update()
 
-for i in range(2):
+for i in range(50):
     cIndex = 'c'+ str(objectsIndex)
     carrot = crt.carrot(screen, cIndex, 1, WIDTH - 11, 1, HEIGHT - 11)
     food.append(carrot)
@@ -48,7 +53,7 @@ for i in range(2):
     objectsIndex += 1
     markMap(carrot)
      
-for i in range(50):
+for i in range(2):
     rIndex = 'r' + str(objectsIndex)
     rabbit = rb.rabbit(screen, rIndex, 250, 250, 10, 30)
     rabbits.append(rabbit)
@@ -64,7 +69,23 @@ def main():
         clock.tick(SPEED)
 
         for rabbit in rabbits:
+            
+            if rabbit.energy <= 0:
+                rabbit.dead = True
+                rabbits.remove(rabbit)
             rabbit.move(bg.image, indexMap, objectsDictionary)
+            clearMap(rabbit.oldPosition[0],rabbit.oldPosition[1],rabbit.rect.h)
+            eat = rabbit.selfScan(indexMap)
+
+            if eat != 'g':
+                target = objectsDictionary.get(eat)
+                if target.dead != True:
+                    clearMap(target.rect.left,target.rect.top,target.rect.h)
+                    objectsDictionary.pop(eat)
+                    target.dead = True
+                    rabbit.energy += (target.energyRep) % rabbit.maxEnergy
+                    food.remove(target)
+                    rabbit.wandering = True
 
         drawScreen(screen)
 

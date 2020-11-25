@@ -11,8 +11,8 @@ class rabbit(animal):
         self.rect.top = posy
 
         self.dead = False
-        self.energy = 100
-        self.maxEnergy = 200
+        self.energy = 150
+        self.maxEnergy = 500
         self.energyRep = 20
         self.reproduciton = 0.2
         

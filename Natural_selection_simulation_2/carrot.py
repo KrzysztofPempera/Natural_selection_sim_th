@@ -5,7 +5,7 @@ class carrot(object):
 
     def __init__(self, surface, index, minX, maxX, minY, maxY):
         self.surface = surface
-        self.energyRep = 10
+        self.energyRep = 50
         self.dead = False
         self.image = pg.image.load('Carrot.png').convert()
         self.rect = self.image.get_rect()
