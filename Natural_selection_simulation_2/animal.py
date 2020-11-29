@@ -7,6 +7,9 @@ import json
 with open('para.json', 'r') as para:
     config = json.load(para)
 
+
+MUTATION_THRESHOLD = 0.5
+
 class animal(object):
     
     def __init__(self, surface, index, movementspeed, sense):
@@ -44,6 +47,32 @@ class animal(object):
         desired = desired * self.ms
         velocity = (math.ceil(desired[0]),math.ceil(desired[1]))
         return velocity
+
+    def mutate(self, parameter):
+        mutationPosibilities = [1,-1]
+        ifMutate = rnd.uniform(0,1)
+
+        if ifMutate < MUTATION_THRESHOLD:   
+            parameter += rnd.choice(mutationPosibilities)
+        return parameter
+
+    def reproduce(self, referenceList, animal, objectsIndex, objectsDictionary):
+        self.energy = math.floor(self.energy*config['REPRODUCTION_COST'])
+        aPosition = self.getPosition()
+
+        newMs = self.mutate(self.ms)
+        newSense = self.mutate(self.sense)
+
+        if newSense <=10:
+            newSense = 11
+        if newMs <= 0:
+            newMs = 1
+        
+        newIndex = self.type + str(objectsIndex)
+        newAnimal = animal(self.surface,newIndex,  aPosition[0], aPosition[1], newMs, newSense)
+        referenceList.append(newAnimal)
+        objectsDictionary[newAnimal.index] = newAnimal
+
 
     def search(self, indexMap):
         center = self.rect.center
@@ -93,8 +122,8 @@ class animal(object):
         y = self.rect.top
         h = self.rect.h
 
-        for i in range(y, y + h + 1):
-            for j in range(x, x + h +1):
+        for i in range(y, (y + h + 1) % 500):
+            for j in range(x, (x + h +1) % 500):
                 if indexMap[i][j] != 'g' and indexMap [i][j][0] != 'r':
                     return indexMap[i][j]
         return 'g'

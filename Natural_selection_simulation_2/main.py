@@ -11,7 +11,7 @@ with open('para.json', 'r') as para:
 
 WIDTH = 500
 HEIGHT = 500
-SPEED = 2
+SPEED = 24
 RABBIT_MOVEMENT_SPEED = config['RABBIT_MOVEMENT_SPEED']
 WOLF_MOVEMENT_SPEED = config['WOLF_MOVEMENT_SPEED']
 WOLF_SENSE = config['WOLF_SENSE']
@@ -53,7 +53,7 @@ def drawScreen(surface):
 
     pg.display.update()
 
-for i in range(100):
+for i in range(400):
     cIndex = 'c'+ str(objectsIndex)
     carrot = crt.carrot(screen, cIndex, 1, WIDTH - 11, 1, HEIGHT - 11)
     food.append(carrot)
@@ -61,7 +61,7 @@ for i in range(100):
     objectsIndex += 1
     markMap(carrot)
      
-for i in range(2):
+for i in range(1):
     rIndex = 'r' + str(objectsIndex)
     rabbit = rb.rabbit(screen, rIndex, 250, 250, RABBIT_MOVEMENT_SPEED, RABBIT_SENSE)
     rabbits.append(rabbit)
@@ -70,7 +70,7 @@ for i in range(2):
     markMap(rabbit)
 
 def main():
-    global turn, objectIndex, indexMap, objectsDictionary
+    global turn, objectsIndex, indexMap, objectsDictionary
     running = True
     while running:
         
@@ -81,6 +81,10 @@ def main():
             if rabbit.energy <= 0:
                 rabbit.dead = True
                 rabbits.remove(rabbit)
+            elif rabbit.energy > rabbit.reproduciton*rabbit.maxEnergy:
+                rabbit.reproduce(rabbits, rb.rabbit, objectsIndex, objectsDictionary)
+                objectsIndex += 1
+
             rabbit.move(bg.image, indexMap, objectsDictionary)
             clearMap(rabbit.oldPosition[0],rabbit.oldPosition[1],rabbit.rect.h)
             eat = rabbit.selfScan(indexMap)

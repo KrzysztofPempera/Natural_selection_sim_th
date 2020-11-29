@@ -14,6 +14,7 @@ class rabbit(animal):
         self.rect.left = posx
         self.rect.top = posy
 
+        self.type = 'r'
         self.dead = False
         self.energy = config['RABBIT_ENERGY']
         self.maxEnergy = config['RABBIT_MAX_ENERGY']

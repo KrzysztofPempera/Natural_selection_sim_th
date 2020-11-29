@@ -15,6 +15,7 @@ class carrot(object):
         self.rect = self.image.get_rect()
         self.index = index
 
+        self.type = 'c'
         self.startingLocation = (rnd.randint(minX, maxX -1),rnd.randint(minY, maxY -1))
         self.rect.left, self.rect.top = self.startingLocation
         
