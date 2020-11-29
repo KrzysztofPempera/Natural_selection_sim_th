@@ -4,10 +4,19 @@ import carrot as crt
 import rabbit as rb
 import sys
 import colours
+import json
+
+with open('para.json', 'r') as para:
+    config = json.load(para)
 
 WIDTH = 500
 HEIGHT = 500
 SPEED = 2
+RABBIT_MOVEMENT_SPEED = config['RABBIT_MOVEMENT_SPEED']
+WOLF_MOVEMENT_SPEED = config['WOLF_MOVEMENT_SPEED']
+WOLF_SENSE = config['WOLF_SENSE']
+RABBIT_SENSE = config['RABBIT_SENSE']
+CARROT_REP = config['CARROT_REP']
 
 pg.init()
 
@@ -37,7 +46,6 @@ def clearMap(x,y,h):
             indexMap[(y + i) % 500][(x + j) % 500] = 'g'
 
 def drawScreen(surface):
-    screen.blit(bg.image, bg.rect)
     for carrot in food:
         surface.blit(carrot.image, carrot.rect)
     for rabbit in rabbits:
@@ -45,7 +53,7 @@ def drawScreen(surface):
 
     pg.display.update()
 
-for i in range(50):
+for i in range(100):
     cIndex = 'c'+ str(objectsIndex)
     carrot = crt.carrot(screen, cIndex, 1, WIDTH - 11, 1, HEIGHT - 11)
     food.append(carrot)
@@ -55,7 +63,7 @@ for i in range(50):
      
 for i in range(2):
     rIndex = 'r' + str(objectsIndex)
-    rabbit = rb.rabbit(screen, rIndex, 250, 250, 10, 30)
+    rabbit = rb.rabbit(screen, rIndex, 250, 250, RABBIT_MOVEMENT_SPEED, RABBIT_SENSE)
     rabbits.append(rabbit)
     objectsDictionary[rabbit.index] = rabbit
     objectsIndex += 1
@@ -81,6 +89,7 @@ def main():
                 target = objectsDictionary.get(eat)
                 if target.dead != True:
                     clearMap(target.rect.left,target.rect.top,target.rect.h)
+                    screen.blit(bg.image, target.rect, target.rect)
                     objectsDictionary.pop(eat)
                     target.dead = True
                     rabbit.energy += (target.energyRep) % rabbit.maxEnergy

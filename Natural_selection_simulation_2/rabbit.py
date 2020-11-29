@@ -1,5 +1,9 @@
 import pygame as pg
 from animal import animal
+import json
+
+with open('para.json', 'r') as para:
+    config = json.load(para)
 
 class rabbit(animal):
 
@@ -11,8 +15,8 @@ class rabbit(animal):
         self.rect.top = posy
 
         self.dead = False
-        self.energy = 150
-        self.maxEnergy = 500
-        self.energyRep = 20
-        self.reproduciton = 0.2
+        self.energy = config['RABBIT_ENERGY']
+        self.maxEnergy = config['RABBIT_MAX_ENERGY']
+        self.energyRep = config['RABBIT_ENERGY_REP']
+        self.reproduciton = config['RABBIT_REPRODUCTION']
         

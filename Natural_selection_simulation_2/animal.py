@@ -2,6 +2,10 @@ import pygame as pg
 import random as rnd
 import numpy as np
 import math
+import json
+
+with open('para.json', 'r') as para:
+    config = json.load(para)
 
 class animal(object):
     
