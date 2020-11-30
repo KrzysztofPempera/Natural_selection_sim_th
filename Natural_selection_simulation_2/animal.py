@@ -83,35 +83,35 @@ class animal(object):
         for i in range((center[0] - sense) % 500, (center[0] + sense) % 500):
             x = i % 500
             y = (center[1] - sense) % 500
-            if indexMap[y][x] != 'g' and indexMap[y][x][0] != 'r':
+            if indexMap[y][x][0] == self.prey:
                 target = indexMap[y][x]
                 return target
         #topright - bottomright
         for i in range((center[1] - sense) % 500, (center[1] + sense) % 500):
             x = (center[0] + sense) % 500
             y = i % 500
-            if indexMap[y][x] != 'g' and indexMap[y][x][0] != 'r':
+            if indexMap[y][x][0] == self.prey:
                 target = indexMap[y][x]
                 return target
         #bottomright - bottomleft
         for i in range((center[0] + sense) % 500, (center[0] - sense) % 500, -1):
             x = i % 500
             y = (center[1] + sense) % 500
-            if indexMap[y][x] != 'g' and indexMap[y][x][0] != 'r':
+            if indexMap[y][x][0] == self.prey:
                 target = indexMap[y][x]
                 return target
         #bottomleft - topleft
         for i in range ((center[1] - sense) % 500, (center[1] + sense) % 500):
             x = (center[0] - sense) % 500
             y = i % 500
-            if indexMap[y][x] != 'g' and indexMap[y][x][0] != 'r':
+            if indexMap[y][x][0] == self.prey:
                 target = indexMap[y][x]
                 return target
         return target
 
     def seek(self, indexMap, objectsDictionary):
         target = self.search(indexMap)
-        if target != 'g':
+        if target[0] == self.prey:
             self.target = objectsDictionary.get(target)
             self.wandering = False
         else:
@@ -124,7 +124,7 @@ class animal(object):
 
         for i in range(y, (y + h + 1) % 500):
             for j in range(x, (x + h +1) % 500):
-                if indexMap[i][j] != 'g' and indexMap [i][j][0] != 'r':
+                if indexMap[i][j][0] == self.prey:
                     return indexMap[i][j]
         return 'g'
 
