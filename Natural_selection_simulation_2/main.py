@@ -41,7 +41,7 @@ def markMap(object):
         for j in range(object.rect.w):
             indexMap[(object.rect.top + i) % 500][(object.rect.left + j) % 500] = object.index
 
-def clearMap(x,y,h ,):
+def clearMap(x,y,h):
     global indexMap
     for i in range (h):
         for j in range(h):
@@ -79,7 +79,6 @@ for i in range(1):
     wolfs.append(wolf)
     objectsDictionary[wolf.index] = wolf
     objectsIndex += 1
-    markMap(wolf)
 
 def main():
     global turn, objectsIndex, indexMap, objectsDictionary
@@ -146,8 +145,6 @@ def main():
                     rabbits.remove(target)
                     wolf.wandering = True            
 
-            clearMap(wolf.oldPosition[0], wolf.oldPosition[1], wolf.rect.h)
-            markMap(wolf)
 
             if wolf.dead == True:
                 objectsDictionary.pop(wolf.index)
