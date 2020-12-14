@@ -80,30 +80,30 @@ class animal(object):
         target = 'g'
         ##to fix diferent species, function, around the world chase?
         #topleft - topright
-        for i in range((center[0] - sense) % 500, (center[0] + sense) % 500):
-            x = i % 500
-            y = (center[1] - sense) % 500
+        for i in range((center[0] - sense) % 800, (center[0] + sense) % 800):
+            x = i % 800
+            y = (center[1] - sense) % 800
             if indexMap[y][x][0] == self.prey:
                 target = indexMap[y][x]
                 return target
         #topright - bottomright
-        for i in range((center[1] - sense) % 500, (center[1] + sense) % 500):
-            x = (center[0] + sense) % 500
-            y = i % 500
+        for i in range((center[1] - sense) % 800, (center[1] + sense) % 800):
+            x = (center[0] + sense) % 800
+            y = i % 800
             if indexMap[y][x][0] == self.prey:
                 target = indexMap[y][x]
                 return target
         #bottomright - bottomleft
-        for i in range((center[0] + sense) % 500, (center[0] - sense) % 500, -1):
-            x = i % 500
-            y = (center[1] + sense) % 500
+        for i in range((center[0] + sense) % 800, (center[0] - sense) % 800, -1):
+            x = i % 800
+            y = (center[1] + sense) % 800
             if indexMap[y][x][0] == self.prey:
                 target = indexMap[y][x]
                 return target
         #bottomleft - topleft
-        for i in range ((center[1] - sense) % 500, (center[1] + sense) % 500):
-            x = (center[0] - sense) % 500
-            y = i % 500
+        for i in range ((center[1] - sense) % 800, (center[1] + sense) % 800):
+            x = (center[0] - sense) % 800
+            y = i % 800
             if indexMap[y][x][0] == self.prey:
                 target = indexMap[y][x]
                 return target
@@ -122,10 +122,18 @@ class animal(object):
         y = self.rect.top
         h = self.rect.h
 
-        for i in range(y, (y + h + 1) % 500):
-            for j in range(x, (x + h +1) % 500):
-                if indexMap[i][j][0] == self.prey:
-                    return indexMap[i][j]
+        scanningArea = [(self.rect.left, self.rect.top), (self.rect.left, self.rect.bottom), (self.rect.right, self.rect.top), (self.rect.right, self.rect.bottom), 
+                        (self.rect.left + int(h/2), self.rect.top), (self.rect.left + int(h/2), self.rect.bottom), (self.rect.left, self.rect.top - int(h/2)),
+                       (self.rect.right, self.rect.top  - int(h/2)), (self.rect.center)]
+        
+        for area in scanningArea:
+            if indexMap[area[1]%800][area[0]%800][0] == self.prey:
+                return indexMap[area[1]%800][area[0]%800]
+
+        #for i in range(y, (y + h + 1) % 800):
+        #    for j in range(x, (x + h +1) % 800):
+        #        if indexMap[i][j][0] == self.prey:
+        #            return indexMap[i][j]
         return 'g'
 
     def getNewPosition(self, position):
@@ -146,8 +154,8 @@ class animal(object):
 
     def wander(self):
             newPosition = self.wanderingDirection()
-            self.rect.left = newPosition[0] % 500
-            self.rect.top = newPosition[1] % 500
+            self.rect.left = newPosition[0] % 800
+            self.rect.top = newPosition[1] % 800
     
 
     def move(self, bg, indexMap, objectsDictionary):
@@ -163,8 +171,8 @@ class animal(object):
                     self.wander()
                 else:
                     self.oldPosition = self.getPosition()
-                    self.rect.left = (self.rect.left + velocity[0]) % 500
-                    self.rect.top = (self.rect.top + velocity [1]) % 500
+                    self.rect.left = (self.rect.left + velocity[0]) % 800
+                    self.rect.top = (self.rect.top + velocity [1]) % 800
                 
             elif self.target.dead == True:
                 self.wandering = True

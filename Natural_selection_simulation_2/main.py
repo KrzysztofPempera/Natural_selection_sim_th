@@ -57,7 +57,7 @@ def drawScreen(surface):
 
     pg.display.update()
 
-for i in range(700):
+for i in range(1800):
     cIndex = 'c'+ str(objectsIndex)
     carrot = crt.carrot(screen, cIndex, 1, WIDTH - 11, 1, HEIGHT - 11)
     food.append(carrot)
@@ -65,7 +65,7 @@ for i in range(700):
     objectsIndex += 1
     markMap(carrot)
      
-for i in range(1):
+for i in range(200):
     rIndex = 'r' + str(objectsIndex)
     rabbit = rb.rabbit(screen, rIndex, 250, 250, RABBIT_MOVEMENT_SPEED, RABBIT_SENSE)
     rabbits.append(rabbit)
