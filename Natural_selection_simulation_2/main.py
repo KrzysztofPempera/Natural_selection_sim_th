@@ -10,8 +10,8 @@ import json
 with open('para.json', 'r') as para:
     config = json.load(para)
 
-WIDTH = 500
-HEIGHT = 500
+WIDTH = 800
+HEIGHT = 800
 SPEED = 24
 RABBIT_MOVEMENT_SPEED = config['RABBIT_MOVEMENT_SPEED']
 WOLF_MOVEMENT_SPEED = config['WOLF_MOVEMENT_SPEED']
@@ -32,20 +32,20 @@ objectsDictionary = {}
 food = []
 rabbits = []
 wolfs = []
-indexMap = [['g' for i in range (500)] for j in range (500)]
+indexMap = [['g' for i in range (800)] for j in range (800)]
 turn = 1
 
 def markMap(object):
     global indexMap
     for i in range (object.rect.h):
         for j in range(object.rect.w):
-            indexMap[(object.rect.top + i) % 500][(object.rect.left + j) % 500] = object.index
+            indexMap[(object.rect.top + i) % 800][(object.rect.left + j) % 800] = object.index
 
 def clearMap(x,y,h):
     global indexMap
     for i in range (h):
         for j in range(h):
-            indexMap[(y + i) % 500][(x + j) % 500] = 'g'
+            indexMap[(y + i) % 800][(x + j) % 800] = 'g'
 
 def drawScreen(surface):
     for carrot in food:
@@ -57,7 +57,7 @@ def drawScreen(surface):
 
     pg.display.update()
 
-for i in range(400):
+for i in range(700):
     cIndex = 'c'+ str(objectsIndex)
     carrot = crt.carrot(screen, cIndex, 1, WIDTH - 11, 1, HEIGHT - 11)
     food.append(carrot)
@@ -73,7 +73,7 @@ for i in range(1):
     objectsIndex += 1
     markMap(rabbit)
 
-for i in range(1):
+for i in range(0):
     wIndex = 'w' + str(objectsIndex)
     wolf = wlf.wolf(screen, wIndex, 200, 200, WOLF_MOVEMENT_SPEED, WOLF_SENSE)
     wolfs.append(wolf)
