@@ -43,10 +43,16 @@ class animal(object):
 
         desired = np.subtract(targetPosition, animalPosition)
 
+        dCheck = math.ceil(math.sqrt((desired[0]**2)+(desired[1]**2)))
+
         desired = self.normalize(desired)
         desired = desired * self.ms
         velocity = (math.ceil(desired[0]),math.ceil(desired[1]))
-        return velocity
+
+        if dCheck > 400:
+            return np.negative(velocity)
+        else:
+            return velocity
 
     def mutate(self, parameter):
         mutationPosibilities = [1,-1]

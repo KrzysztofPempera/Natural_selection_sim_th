@@ -57,9 +57,13 @@ def drawScreen(surface):
 
     pg.display.update()
 
+
 for i in range(1800):
     cIndex = 'c'+ str(objectsIndex)
+   
+
     carrot = crt.carrot(screen, cIndex, 1, WIDTH - 11, 1, HEIGHT - 11)
+    
     food.append(carrot)
     objectsDictionary[carrot.index] =  carrot
     objectsIndex += 1
@@ -110,6 +114,7 @@ def main():
                     rabbit.energy += (target.energyRep) % rabbit.maxEnergy
                     food.remove(target)
                     rabbit.wandering = True
+
            
             clearMap(rabbit.oldPosition[0],rabbit.oldPosition[1],rabbit.rect.h)
 
