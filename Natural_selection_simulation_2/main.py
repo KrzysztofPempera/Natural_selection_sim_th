@@ -35,17 +35,26 @@ wolfs = []
 indexMap = [['g' for i in range (800)] for j in range (800)]
 turn = 1
 
+#def createPerimeter(x,y,h):
+#    perimeter = []
+
 def markMap(object):
     global indexMap
-    for i in range (object.rect.h):
-        for j in range(object.rect.w):
-            indexMap[(object.rect.top + i) % 800][(object.rect.left + j) % 800] = object.index
 
-def clearMap(x,y,h):
+    indexMap[object.rect.top][object.rect.left] = object.index
+    indexMap[object.rect.center[1]%800][object.rect.center[0]%800] = object.index
+    #for i in range (object.rect.h):
+    #    for j in range(object.rect.w):
+    #        indexMap[(object.rect.top + i) % 800][(object.rect.left + j) % 800] = object.index
+
+def clearMap(x,y,x2,y2):
     global indexMap
-    for i in range (h):
-        for j in range(h):
-            indexMap[(y + i) % 800][(x + j) % 800] = 'g'
+    
+    indexMap[y][x] = 'g'
+    indexMap[y2%800][x2%800] = 'g'
+    #for i in range (h):
+    #    for j in range(h):
+    #        indexMap[(y + i) % 800][(x + j) % 800] = 'g'
 
 def drawScreen(surface):
     for carrot in food:
@@ -61,7 +70,6 @@ def drawScreen(surface):
 for i in range(1800):
     cIndex = 'c'+ str(objectsIndex)
    
-
     carrot = crt.carrot(screen, cIndex, 1, WIDTH - 11, 1, HEIGHT - 11)
     
     food.append(carrot)
@@ -84,9 +92,16 @@ for i in range(0):
     objectsDictionary[wolf.index] = wolf
     objectsIndex += 1
 
+
+#print(objectsDictionary)
+
+
 def main():
     global turn, objectsIndex, indexMap, objectsDictionary
     running = True
+
+    targets = []
+
     while running:
         
         clock.tick(SPEED)
@@ -105,9 +120,10 @@ def main():
             eat = rabbit.selfScan(indexMap)
 
             if eat[0] == rabbit.prey:
+                targets.append(eat)
                 target = objectsDictionary.get(eat)
                 if target.dead != True:
-                    clearMap(target.rect.left,target.rect.top,target.rect.h)
+                    clearMap(target.rect.left,target.rect.top,target.rect.center[0], target.rect.center[1])
                     screen.blit(bg.image, target.rect, target.rect)
                     objectsDictionary.pop(eat)
                     target.dead = True
@@ -116,15 +132,17 @@ def main():
                     rabbit.wandering = True
 
            
-            clearMap(rabbit.oldPosition[0],rabbit.oldPosition[1],rabbit.rect.h)
+            clearMap(rabbit.oldPosition[0],rabbit.oldPosition[1], rabbit.oldCenter[0], rabbit.oldCenter[1])
 
 
             if rabbit.dead == True:
                 objectsDictionary.pop(rabbit.index)
                 pos = rabbit.getPosition()
-                clearMap(pos[0], pos[1], rabbit.rect.h)
+                clearMap(pos[0], pos[1], rabbit.rect.center[0], rabbit.rect.center[1])
             else:
                 markMap(rabbit)
+
+
         #multithreading!!!
         for wolf in wolfs:
             
@@ -142,7 +160,7 @@ def main():
             if eat[0] == wolf.prey:
                 target = objectsDictionary.get(eat)
                 if target.dead != True:
-                    clearMap(target.rect.left,target.rect.top,target.rect.h)
+                    clearMap(target.rect.left,target.rect.top, target.rect.center[0], target.rect.center[1])
                     screen.blit(bg.image, target.rect, target.rect)
                     objectsDictionary.pop(eat)
                     target.dead = True
@@ -155,6 +173,9 @@ def main():
                 objectsDictionary.pop(wolf.index)
 
         drawScreen(screen)
+
+        for carrot in food:
+            markMap(carrot)
 
         turn += 1
         #if turn == 50:
