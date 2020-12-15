@@ -41,17 +41,25 @@ turn = 1
 def markMap(object):
     global indexMap
 
-    indexMap[object.rect.top][object.rect.left] = object.index
     indexMap[object.rect.center[1]%800][object.rect.center[0]%800] = object.index
+
+    indexMap[object.rect.top][object.rect.left] = object.index
+    indexMap[object.rect.top][(object.rect.left+object.rect.h)%800] = object.index
+    indexMap[(object.rect.top+object.rect.h)%800][(object.rect.left+object.rect.h)%800] = object.index
+    indexMap[(object.rect.top+object.rect.h)%800][object.rect.left] = object.index
     #for i in range (object.rect.h):
     #    for j in range(object.rect.w):
     #        indexMap[(object.rect.top + i) % 800][(object.rect.left + j) % 800] = object.index
 
-def clearMap(x,y,x2,y2):
+def clearMap(x,y,x2,y2,h):
     global indexMap
     
-    indexMap[y][x] = 'g'
     indexMap[y2%800][x2%800] = 'g'
+
+    indexMap[y][x] = 'g'
+    indexMap[y][(x + h)%800] = 'g'
+    indexMap[(y+h)%800][(x + h)%800] = 'g'
+    indexMap[(y+h)%800][x] = 'g'
     #for i in range (h):
     #    for j in range(h):
     #        indexMap[(y + i) % 800][(x + j) % 800] = 'g'
@@ -123,7 +131,7 @@ def main():
                 targets.append(eat)
                 target = objectsDictionary.get(eat)
                 if target.dead != True:
-                    clearMap(target.rect.left,target.rect.top,target.rect.center[0], target.rect.center[1])
+                    clearMap(target.rect.left,target.rect.top,target.rect.center[0], target.rect.center[1], target.rect.h)
                     screen.blit(bg.image, target.rect, target.rect)
                     objectsDictionary.pop(eat)
                     target.dead = True
@@ -132,13 +140,13 @@ def main():
                     rabbit.wandering = True
 
            
-            clearMap(rabbit.oldPosition[0],rabbit.oldPosition[1], rabbit.oldCenter[0], rabbit.oldCenter[1])
+            clearMap(rabbit.oldPosition[0],rabbit.oldPosition[1], rabbit.oldCenter[0], rabbit.oldCenter[1], rabbit.rect.h)
 
 
             if rabbit.dead == True:
                 objectsDictionary.pop(rabbit.index)
                 pos = rabbit.getPosition()
-                clearMap(pos[0], pos[1], rabbit.rect.center[0], rabbit.rect.center[1])
+                clearMap(pos[0], pos[1], rabbit.rect.center[0], rabbit.rect.center[1], rabbit.rect.h)
             else:
                 markMap(rabbit)
 
@@ -160,7 +168,7 @@ def main():
             if eat[0] == wolf.prey:
                 target = objectsDictionary.get(eat)
                 if target.dead != True:
-                    clearMap(target.rect.left,target.rect.top, target.rect.center[0], target.rect.center[1])
+                    clearMap(target.rect.left,target.rect.top, target.rect.center[0], target.rect.center[1], target.rect.h)
                     screen.blit(bg.image, target.rect, target.rect)
                     objectsDictionary.pop(eat)
                     target.dead = True

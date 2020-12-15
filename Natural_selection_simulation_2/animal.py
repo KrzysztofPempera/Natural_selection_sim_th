@@ -52,6 +52,8 @@ class animal(object):
 
         if dCheck > 400:
             return np.negative(velocity)
+        elif dCheck <= self.ms:
+            return desired
         else:
             return velocity
 
@@ -85,34 +87,34 @@ class animal(object):
         center = self.rect.center
         sense = self.sense
         target = 'g'
-        ##topleft - topright
-        #for i in range((center[0] - sense) % 800, (center[0] + sense) % 800):
-        #    x = i % 800
-        #    y = (center[1] - sense) % 800
-        #    if indexMap[y][x][0] == self.prey:
-        #        target = indexMap[y][x]
-        #        return target
-        ##topright - bottomright
-        #for i in range((center[1] - sense) % 800, (center[1] + sense) % 800):
-        #    x = (center[0] + sense) % 800
-        #    y = i % 800
-        #    if indexMap[y][x][0] == self.prey:
-        #        target = indexMap[y][x]
-        #        return target
-        ##bottomright - bottomleft
-        #for i in range((center[0] + sense) % 800, (center[0] - sense) % 800, -1):
-        #    x = i % 800
-        #    y = (center[1] + sense) % 800
-        #    if indexMap[y][x][0] == self.prey:
-        #        target = indexMap[y][x]
-        #        return target
-        ##bottomleft - topleft
-        #for i in range ((center[1] - sense) % 800, (center[1] + sense) % 800):
-        #    x = (center[0] - sense) % 800
-        #    y = i % 800
-        #    if indexMap[y][x][0] == self.prey:
-        #        target = indexMap[y][x]
-        #        return target
+        #topleft - topright
+        for i in range((center[0] - sense) % 800, (center[0] + sense) % 800):
+            x = i % 800
+            y = (center[1] - sense) % 800
+            if indexMap[y][x][0] == self.prey:
+                target = indexMap[y][x]
+                return target
+        #topright - bottomright
+        for i in range((center[1] - sense) % 800, (center[1] + sense) % 800):
+            x = (center[0] + sense) % 800
+            y = i % 800
+            if indexMap[y][x][0] == self.prey:
+                target = indexMap[y][x]
+                return target
+        #bottomright - bottomleft
+        for i in range((center[0] + sense) % 800, (center[0] - sense) % 800, -1):
+            x = i % 800
+            y = (center[1] + sense) % 800
+            if indexMap[y][x][0] == self.prey:
+                target = indexMap[y][x]
+                return target
+        #bottomleft - topleft
+        for i in range ((center[1] - sense) % 800, (center[1] + sense) % 800):
+            x = (center[0] - sense) % 800
+            y = i % 800
+            if indexMap[y][x][0] == self.prey:
+                target = indexMap[y][x]
+                return target
 
 
 
