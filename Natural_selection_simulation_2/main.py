@@ -106,7 +106,39 @@ for i in range(1):
 #print(objectsDictionary)
 createFood(1800)
 
+###NIGHT
+#def animalBehavior(animals, target):
 
+#    for animal in animals:
+#        ###to change
+#        if animal.energy <= 0:
+#            animal.dead = True
+#            animals.remove(animal)
+#        elif animal.energy > animal.reproduction*animal.maxEnergy:
+#            if animals == rabbits:
+#                newAnimal = rb.rabbit
+#            elif animals == wolfs:
+#                newAnimal = wlf.wolf
+#            animal.reproduce(animals, newAnimal, objectsIndex, objectsDictionary)
+
+###DAY
+def animalBehavior(animal, targets):
+
+    animal.move(bg.image, indexMap, objectsDictionary)
+
+    eat = animal.selfScan(indexMap)
+    if eat[0] == animal.prey:
+
+        target = objectsDictionary.get(eat)
+        if target.dead != True:
+
+            clearMap(target.rect.left,target.rect.top,target.rect.center[0], target.rect.center[1], target.rect.h)
+            screen.blit(bg.image, target.rect, target.rect)
+            objectsDictionary.pop(eat)
+            target.dead = True
+            animal.energy += (target.energyRep) % rabbit.maxEnergy
+            targets.remove(target)
+            animal.wandering = True
 
 def day():
     global objectsIndex, indexMap, objectsDictionary
@@ -120,20 +152,7 @@ def day():
             rabbit.reproduce(rabbits, rb.rabbit, objectsIndex, objectsDictionary)
             objectsIndex += 1          
 
-        rabbit.move(bg.image, indexMap, objectsDictionary)
-
-        eat = rabbit.selfScan(indexMap)
-
-        if eat[0] == rabbit.prey:
-            target = objectsDictionary.get(eat)
-            if target.dead != True:
-                clearMap(target.rect.left,target.rect.top,target.rect.center[0], target.rect.center[1], target.rect.h)
-                screen.blit(bg.image, target.rect, target.rect)
-                objectsDictionary.pop(eat)
-                target.dead = True
-                rabbit.energy += (target.energyRep) % rabbit.maxEnergy
-                food.remove(target)
-                rabbit.wandering = True
+        animalBehavior(rabbit, food)
 
            
         clearMap(rabbit.oldPosition[0],rabbit.oldPosition[1], rabbit.oldCenter[0], rabbit.oldCenter[1], rabbit.rect.h)
@@ -157,20 +176,7 @@ def day():
             wolf.reproduce(wolfs, wlf.wolf, objectsIndex, objectsDictionary)
             objectsIndex += 1
            
-        wolf.move(bg.image, indexMap, objectsDictionary)
-            
-        eat = wolf.selfScan(indexMap)
-
-        if eat[0] == wolf.prey:
-            target = objectsDictionary.get(eat)
-            if target.dead != True:
-                clearMap(target.rect.left,target.rect.top, target.rect.center[0], target.rect.center[1], target.rect.h)
-                screen.blit(bg.image, target.rect, target.rect)
-                objectsDictionary.pop(eat)
-                target.dead = True
-                wolf.energy += (target.energyRep) % wolf.maxEnergy
-                rabbits.remove(target)
-                wolf.wandering = True            
+        animalBehavior(wolf, rabbits)      
 
 
         if wolf.dead == True:
@@ -197,12 +203,13 @@ def main():
         clock.tick(SPEED)
 
         day()
+        night()
 
         turn += 1
         #if turn == 50:
         #    screen.blit(bg.image , food[1].rect, food[1].rect)
         #    food.pop(1)
-        if turn == 150:
+        if turn == 1500:
             pg.quit()
         for event in pg.event.get():
             if event.type == pg.QUIT:
