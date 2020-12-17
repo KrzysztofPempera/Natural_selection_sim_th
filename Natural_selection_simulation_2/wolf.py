@@ -20,6 +20,6 @@ class wolf(animal):
         self.maxEnergy = config['WOLF_MAX_ENERGY']
         self.reproduciton = config['WOLF_REPRODUCTION']
         self.maxAge = config['WOLF_MAX_AGE']
-        
+        self.den = (posx, posy)
 
 

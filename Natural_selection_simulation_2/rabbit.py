@@ -21,4 +21,5 @@ class rabbit(animal):
         self.maxEnergy = config['RABBIT_MAX_ENERGY']
         self.energyRep = config['RABBIT_ENERGY_REP']
         self.reproduciton = config['RABBIT_REPRODUCTION']
+        self.den = (posx, posy)
         

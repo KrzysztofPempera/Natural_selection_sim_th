@@ -86,25 +86,28 @@ def createFood(n):
         objectsDictionary[carrot.index] =  carrot
         objectsIndex += 1
         markMap(carrot)
-     
-for i in range(100):
-    rIndex = 'r' + str(objectsIndex)
-    rabbit = rb.rabbit(screen, rIndex, rnd.randint(100,200), rnd.randint(100,200), RABBIT_MOVEMENT_SPEED, RABBIT_SENSE)
-    rabbits.append(rabbit)
-    objectsDictionary[rabbit.index] = rabbit
-    objectsIndex += 1
-    markMap(rabbit)
 
-for i in range(1):
-    wIndex = 'w' + str(objectsIndex)
-    wolf = wlf.wolf(screen, wIndex, 700, 700, WOLF_MOVEMENT_SPEED, WOLF_SENSE)
-    wolfs.append(wolf)
-    objectsDictionary[wolf.index] = wolf
-    objectsIndex += 1
+def createAnimals(nrabbits, nwolfs):
+    global objectsIndex, indexMap, objectsDictionary
+    for i in range(nrabbits):
+        rIndex = 'r' + str(objectsIndex)
+        rabbit = rb.rabbit(screen, rIndex, rnd.randint(100,200), rnd.randint(100,200), RABBIT_MOVEMENT_SPEED, RABBIT_SENSE)
+        rabbits.append(rabbit)
+        objectsDictionary[rabbit.index] = rabbit
+        objectsIndex += 1
+        markMap(rabbit)
+
+    for i in range(nwolfs):
+        wIndex = 'w' + str(objectsIndex)
+        wolf = wlf.wolf(screen, wIndex, 100, 100, WOLF_MOVEMENT_SPEED, WOLF_SENSE)
+        wolfs.append(wolf)
+        objectsDictionary[wolf.index] = wolf
+        objectsIndex += 1
 
 
 #print(objectsDictionary)
 createFood(1800)
+createAnimals(200, 5)
 
 ###NIGHT
 #def animalBehavior(animals, target):
@@ -136,7 +139,7 @@ def animalBehavior(animal, targets):
             screen.blit(bg.image, target.rect, target.rect)
             objectsDictionary.pop(eat)
             target.dead = True
-            animal.energy += (target.energyRep) % rabbit.maxEnergy
+            animal.energy = (animal.energy + target.energyRep) % animal.maxEnergy
             targets.remove(target)
             animal.wandering = True
 
@@ -145,54 +148,77 @@ def day():
 
     for rabbit in rabbits:
             
-        if rabbit.energy <= 0:
-            rabbit.dead = True
-            rabbits.remove(rabbit)
-        elif rabbit.energy > rabbit.reproduciton*rabbit.maxEnergy:
-            rabbit.reproduce(rabbits, rb.rabbit, objectsIndex, objectsDictionary)
-            objectsIndex += 1          
-
         animalBehavior(rabbit, food)
-
-           
+     
         clearMap(rabbit.oldPosition[0],rabbit.oldPosition[1], rabbit.oldCenter[0], rabbit.oldCenter[1], rabbit.rect.h)
 
-
-        if rabbit.dead == True:
-            objectsDictionary.pop(rabbit.index)
-            pos = rabbit.getPosition()
-            clearMap(pos[0], pos[1], rabbit.rect.center[0], rabbit.rect.center[1], rabbit.rect.h)
-        else:
-            markMap(rabbit)
-
+        markMap(rabbit)
 
         #multithreading!!!
     for wolf in wolfs:
             
-        if wolf.energy <= 0:
-            wolf.dead = True
-            wolfs.remove(wolf)
-        elif wolf.energy > wolf.reproduciton*wolf.maxEnergy:
-            wolf.reproduce(wolfs, wlf.wolf, objectsIndex, objectsDictionary)
-            objectsIndex += 1
-           
-        animalBehavior(wolf, rabbits)      
+        animalBehavior(wolf, rabbits)
 
-
-        if wolf.dead == True:
-            objectsDictionary.pop(wolf.index)
-
-        drawScreen(screen)
+    drawScreen(screen)
 
     for carrot in food:
         markMap(carrot)
 
-    print('day')
-
 
 def night():
-    global objectsIndex, indexMap, objectsDictionary
-    print('night')
+    global rabbits, wolfs, objectsIndex, indexMap, objectsDictionary
+
+    print ('night')
+
+    for rabbit in list(rabbits):
+
+
+
+        if rabbit.energy > rabbit.reproduciton*rabbit.maxEnergy:
+            rabbit.backToDen(bg.image ,rabbit.den[0], rabbit.den[1])
+            clearMap(rabbit.oldPosition[0],rabbit.oldPosition[1], rabbit.oldCenter[0], rabbit.oldCenter[1], rabbit.rect.h)
+
+            #########
+            markMap(rabbit)
+            
+            rabbit.reproduce(rabbits, rb.rabbit, objectsIndex, objectsDictionary)
+            objectsIndex += 1 
+
+
+
+        elif rabbit.energy <= 0:
+            rabbit.dead = True
+            rabbits.remove(rabbit)
+            objectsDictionary.pop(rabbit.index)
+            pos = rabbit.getPosition()
+            clearMap(pos[0], pos[1], rabbit.rect.center[0], rabbit.rect.center[1], rabbit.rect.h)
+
+            rabbit.surface.blit(bg.image, (rabbit.getPosition()))
+
+        else:
+            rabbit.backToDen(bg.image ,rabbit.den[0], rabbit.den[1])
+            clearMap(rabbit.oldPosition[0],rabbit.oldPosition[1], rabbit.oldCenter[0], rabbit.oldCenter[1], rabbit.rect.h)
+            markMap(rabbit)
+    
+    for wolf in list(wolfs):
+
+        if wolf.energy > wolf.reproduciton*wolf.maxEnergy:
+            wolf.backToDen(bg.image ,wolf.den[0], wolf.den[1])
+
+            wolf.reproduce(wolfs, wlf.wolf, objectsIndex, objectsDictionary)
+            objectsIndex += 1
+
+        elif wolf.energy <= 0:
+            wolf.dead = True
+            wolfs.remove(wolf)
+            objectsDictionary.pop(wolf.index)
+            wolf.surface.blit(bg.image, (wolf.getPosition()))
+        
+        else:
+            wolf.backToDen(bg.image, wolf.den[0], wolf.den[1])
+
+    createFood(1000)
+    drawScreen(screen)
 
 def main():
     global turn, objectsIndex, indexMap, objectsDictionary
@@ -202,15 +228,20 @@ def main():
         
         clock.tick(SPEED)
 
-        day()
+        while turn < 100:
+            clock.tick(SPEED)
+            day()
+            turn += 1
+            print (turn)
+        
         night()
 
-        turn += 1
+        turn = 1
         #if turn == 50:
         #    screen.blit(bg.image , food[1].rect, food[1].rect)
         #    food.pop(1)
-        if turn == 1500:
-            pg.quit()
+        #if turn == 400:
+        #    pg.quit()
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()

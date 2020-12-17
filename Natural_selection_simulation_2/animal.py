@@ -169,6 +169,19 @@ class animal(object):
             self.rect.left = newPosition[0] % 800
             self.rect.top = newPosition[1] % 800
     
+    
+    def backToDen(self, bg,  newPosX, newPosyY):
+
+        self.oldPosition = self.getPosition()
+        self.oldCenter = self.rect.center
+
+        self.rect.left = newPosX
+        self.rect.top = newPosyY
+
+        self.surface.blit(bg, (self.oldPosition[0], self.oldPosition[1]))
+
+        self.wandering = True
+        self.target = None
 
     def move(self, bg, indexMap, objectsDictionary):
         if self.wandering == True:
