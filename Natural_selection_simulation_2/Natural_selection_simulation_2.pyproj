@@ -27,6 +27,9 @@
     <Compile Include="carrot.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="dens.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="rabbit.py">
       <SubType>Code</SubType>
     </Compile>

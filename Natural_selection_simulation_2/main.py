@@ -3,8 +3,10 @@ import random as rnd
 import sprites as sp
 import carrot as crt
 import rabbit as rb
+import dens as dn 
 import wolf as wlf
 import sys
+import numpy as np
 import colours
 import json
 
@@ -28,6 +30,7 @@ pg.display.set_caption("Simulation")
 bg = sp.sprite('background.png', [0,0])
 screen.blit(bg.image, bg.rect)
 
+returningAnimals = []
 objectsIndex = 1
 objectsDictionary = {}
 food = []
@@ -35,6 +38,8 @@ rabbits = []
 wolfs = []
 indexMap = [['g' for i in range (800)] for j in range (800)]
 turn = 1
+rabbitDens = [dn.den(100,100), dn.den(100, 700), dn.den(700, 100), dn.den(700, 700)]
+wolfDens = [dn.den(400,400), dn.den(200,200), dn.den(600,600)]
 
 #def createPerimeter(x,y,h):
 #    perimeter = []
@@ -91,7 +96,8 @@ def createAnimals(nrabbits, nwolfs):
     global objectsIndex, indexMap, objectsDictionary
     for i in range(nrabbits):
         rIndex = 'r' + str(objectsIndex)
-        rabbit = rb.rabbit(screen, rIndex, rnd.randint(100,200), rnd.randint(100,200), RABBIT_MOVEMENT_SPEED, RABBIT_SENSE)
+        startingDen = rnd.choice(rabbitDens)
+        rabbit = rb.rabbit(screen, rIndex, startingDen.posx, startingDen.posy, RABBIT_MOVEMENT_SPEED, RABBIT_SENSE, startingDen)
         rabbits.append(rabbit)
         objectsDictionary[rabbit.index] = rabbit
         objectsIndex += 1
@@ -99,7 +105,8 @@ def createAnimals(nrabbits, nwolfs):
 
     for i in range(nwolfs):
         wIndex = 'w' + str(objectsIndex)
-        wolf = wlf.wolf(screen, wIndex, 100, 100, WOLF_MOVEMENT_SPEED, WOLF_SENSE)
+        startingDen = rnd.choice(wolfDens)
+        wolf = wlf.wolf(screen, wIndex, startingDen.posx, startingDen.posy, WOLF_MOVEMENT_SPEED, WOLF_SENSE, startingDen)
         wolfs.append(wolf)
         objectsDictionary[wolf.index] = wolf
         objectsIndex += 1
@@ -107,7 +114,7 @@ def createAnimals(nrabbits, nwolfs):
 
 #print(objectsDictionary)
 createFood(1800)
-createAnimals(200, 5)
+createAnimals(8, 3)
 
 ###NIGHT
 #def animalBehavior(animals, target):
@@ -124,7 +131,6 @@ createAnimals(200, 5)
 #                newAnimal = wlf.wolf
 #            animal.reproduce(animals, newAnimal, objectsIndex, objectsDictionary)
 
-###DAY
 def animalBehavior(animal, targets):
 
     animal.move(bg.image, indexMap, objectsDictionary)
@@ -146,12 +152,15 @@ def animalBehavior(animal, targets):
 def day():
     global objectsIndex, indexMap, objectsDictionary
 
+    for carrot in food:
+        markMap(carrot)
+    
     for rabbit in rabbits:
-            
-        animalBehavior(rabbit, food)
-     
-        clearMap(rabbit.oldPosition[0],rabbit.oldPosition[1], rabbit.oldCenter[0], rabbit.oldCenter[1], rabbit.rect.h)
+              
 
+        animalBehavior(rabbit, food)
+
+        clearMap(rabbit.oldPosition[0],rabbit.oldPosition[1], rabbit.oldCenter[0], rabbit.oldCenter[1], rabbit.rect.h)
         markMap(rabbit)
 
         #multithreading!!!
@@ -161,12 +170,16 @@ def day():
 
     drawScreen(screen)
 
-    for carrot in food:
-        markMap(carrot)
 
+def night_d():
+    for animal in list(returningAnimals):
+        animal.moveBackToDen(bg.image)
+        if animal.getPosition() == animal.den.getPosition():
+            returningAnimals.remove(animal)
+    drawScreen(screen)
 
-def night():
-    global rabbits, wolfs, objectsIndex, indexMap, objectsDictionary
+def night_s():
+    global rabbits, wolfs, objectsIndex, indexMap, objectsDictionary, rabbitDens, returningAnimals
 
     print ('night')
 
@@ -175,39 +188,40 @@ def night():
 
 
         if rabbit.energy > rabbit.reproduciton*rabbit.maxEnergy:
-            rabbit.backToDen(bg.image ,rabbit.den[0], rabbit.den[1])
-            clearMap(rabbit.oldPosition[0],rabbit.oldPosition[1], rabbit.oldCenter[0], rabbit.oldCenter[1], rabbit.rect.h)
+            #rabbit.backToDen(bg.image ,rabbit.den[0], rabbit.den[1])
+            rabbit.findClosestDen(rabbitDens)
+
+            clearMap(rabbit.rect.left,rabbit.rect.top, rabbit.rect.center[0], rabbit.rect.center[1], rabbit.rect.h)
 
             #########
-            markMap(rabbit)
+            #markMap(rabbit)
             
             rabbit.reproduce(rabbits, rb.rabbit, objectsIndex, objectsDictionary)
             objectsIndex += 1 
-
-
+            returningAnimals.append(rabbit)
 
         elif rabbit.energy <= 0:
+            clearMap(rabbit.rect.left, rabbit.rect.top, rabbit.rect.center[0], rabbit.rect.center[1], rabbit.rect.h)
             rabbit.dead = True
             rabbits.remove(rabbit)
             objectsDictionary.pop(rabbit.index)
-            pos = rabbit.getPosition()
-            clearMap(pos[0], pos[1], rabbit.rect.center[0], rabbit.rect.center[1], rabbit.rect.h)
-
             rabbit.surface.blit(bg.image, (rabbit.getPosition()))
 
         else:
-            rabbit.backToDen(bg.image ,rabbit.den[0], rabbit.den[1])
+            #rabbit.backToDen(bg.image ,rabbit.den[0], rabbit.den[1])
+            rabbit.findClosestDen(rabbitDens)
             clearMap(rabbit.oldPosition[0],rabbit.oldPosition[1], rabbit.oldCenter[0], rabbit.oldCenter[1], rabbit.rect.h)
-            markMap(rabbit)
+            #markMap(rabbit)
+            returningAnimals.append(rabbit)
     
     for wolf in list(wolfs):
 
         if wolf.energy > wolf.reproduciton*wolf.maxEnergy:
-            wolf.backToDen(bg.image ,wolf.den[0], wolf.den[1])
-
+            #wolf.backToDen(bg.image ,wolf.den[0], wolf.den[1])
+            wolf.findClosestDen(wolfDens)
             wolf.reproduce(wolfs, wlf.wolf, objectsIndex, objectsDictionary)
             objectsIndex += 1
-
+            returningAnimals.append(wolf)
         elif wolf.energy <= 0:
             wolf.dead = True
             wolfs.remove(wolf)
@@ -215,13 +229,16 @@ def night():
             wolf.surface.blit(bg.image, (wolf.getPosition()))
         
         else:
-            wolf.backToDen(bg.image, wolf.den[0], wolf.den[1])
+            wolf.findClosestDen(wolfDens)
+            returningAnimals.append(wolf)
 
-    createFood(1000)
+    createFood(500)
     drawScreen(screen)
 
+
+
 def main():
-    global turn, objectsIndex, indexMap, objectsDictionary
+    global turn, objectsIndex, indexMap, objectsDictionary, returningAnimals
     running = True
 
     while running:
@@ -234,7 +251,10 @@ def main():
             turn += 1
             print (turn)
         
-        night()
+        night_s()
+        while len(returningAnimals) > 0:
+            clock.tick(SPEED)
+            night_d()
 
         turn = 1
         #if turn == 50:

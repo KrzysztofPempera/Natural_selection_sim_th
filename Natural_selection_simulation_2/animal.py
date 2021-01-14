@@ -12,7 +12,7 @@ MUTATION_THRESHOLD = 0.5
 
 class animal(object):
     
-    def __init__(self, surface, index, movementspeed, sense):
+    def __init__(self, surface, index, posx, posy, movementspeed, sense, den):
         self.surface = surface
         self.index = index
         self.sense = sense
@@ -27,6 +27,8 @@ class animal(object):
         self.oldCenter = (-1,-1)
         self.age = 0
         self.family = -1
+        self.den = den
+        
 
     def getPosition(self):
         return self.rect.left, self.rect.top
@@ -38,9 +40,12 @@ class animal(object):
             return v
         return v / norm
 
-    def createVelocity(self):
+    def calcDistance(self, a, b):
+        return np.sqrt((b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2)
+
+    def createVelocity(self, target):
         animalPosition = self.getPosition()
-        targetPosition = self.target.getPosition()
+        targetPosition = target.getPosition()
 
         desired = np.subtract(targetPosition, animalPosition)
 
@@ -48,14 +53,14 @@ class animal(object):
 
         desired = self.normalize(desired)
         desired = desired * self.ms
-        velocity = (math.ceil(desired[0]),math.ceil(desired[1]))
+        desired = (math.floor(desired[0]) if desired[0] < 0 else math.ceil(desired[0]) ,math.floor(desired[1]) if desired[1] < 0 else math.ceil(desired[1]))
 
         if dCheck > 400:
-            return np.negative(velocity)
-        elif dCheck <= self.ms:
-            return desired
+            return np.negative(desired)
+        elif dCheck <= self.ms or dCheck <= 1:
+            return np.subtract(targetPosition, animalPosition)
         else:
-            return velocity
+            return desired
 
     def mutate(self, parameter):
         mutationPosibilities = [1,-1]
@@ -67,7 +72,7 @@ class animal(object):
 
     def reproduce(self, referenceList, animal, objectsIndex, objectsDictionary):
         self.energy = math.floor(self.energy*config['REPRODUCTION_COST'])
-        aPosition = self.getPosition()
+        aPosition = self.den.getPosition()
 
         newMs = self.mutate(self.ms)
         newSense = self.mutate(self.sense)
@@ -78,7 +83,7 @@ class animal(object):
             newMs = 1
         
         newIndex = self.type + str(objectsIndex)
-        newAnimal = animal(self.surface,newIndex,  aPosition[0], aPosition[1], newMs, newSense)
+        newAnimal = animal(self.surface,newIndex,  aPosition[0], aPosition[1], newMs, newSense, self.den)
         referenceList.append(newAnimal)
         objectsDictionary[newAnimal.index] = newAnimal
 
@@ -169,19 +174,23 @@ class animal(object):
             self.rect.left = newPosition[0] % 800
             self.rect.top = newPosition[1] % 800
     
-    
-    def backToDen(self, bg,  newPosX, newPosyY):
+    def findClosestDen(self, dens):
+        closest = self.calcDistance(self.getPosition(), self.den.getPosition())
+        for den in dens:
+            n = self.calcDistance(self.getPosition(), den.getPosition())
+            if n < closest:
+                closest = n
+                self.den = den
+
+    def moveBackToDen(self, bg):
+        velocity = self.createVelocity(self.den)
 
         self.oldPosition = self.getPosition()
         self.oldCenter = self.rect.center
-
-        self.rect.left = newPosX
-        self.rect.top = newPosyY
-
+        self.rect.left = (self.rect.left + velocity[0]) % 800
+        self.rect.top = (self.rect.top + velocity [1]) % 800
         self.surface.blit(bg, (self.oldPosition[0], self.oldPosition[1]))
 
-        self.wandering = True
-        self.target = None
 
     def move(self, bg, indexMap, objectsDictionary):
         if self.wandering == True:
@@ -190,7 +199,7 @@ class animal(object):
 
         elif self.wandering == False:
             if self.target.dead == False:
-                velocity = self.createVelocity()
+                velocity = self.createVelocity(self.target)
                 if velocity[0] == 0 and velocity[1] == 0:
                     self.wandering = True
                     self.wander()

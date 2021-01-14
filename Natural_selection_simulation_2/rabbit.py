@@ -7,8 +7,8 @@ with open('para.json', 'r') as para:
 
 class rabbit(animal):
 
-    def __init__(self, surface, index, posx, posy, movementspeed, sense):
-        animal.__init__(self, surface, index, movementspeed, sense)
+    def __init__(self, surface, index, posx, posy, movementspeed, sense, den):
+        animal.__init__(self, surface, index, posx, posy, movementspeed, sense, den)
         self.image = pg.image.load('Rabbit.png').convert()
         self.rect = self.image.get_rect()
         self.rect.left = posx
@@ -21,5 +21,4 @@ class rabbit(animal):
         self.maxEnergy = config['RABBIT_MAX_ENERGY']
         self.energyRep = config['RABBIT_ENERGY_REP']
         self.reproduciton = config['RABBIT_REPRODUCTION']
-        self.den = (posx, posy)
         
