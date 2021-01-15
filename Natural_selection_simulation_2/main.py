@@ -171,14 +171,17 @@ def day():
     drawScreen(screen)
 
 
-def night_d():
+def night_3():
+    print('ten')
+
+def night_2():
     for animal in list(returningAnimals):
         animal.moveBackToDen(bg.image)
         if animal.getPosition() == animal.den.getPosition():
             returningAnimals.remove(animal)
     drawScreen(screen)
 
-def night_s():
+def night_1():
     global rabbits, wolfs, objectsIndex, indexMap, objectsDictionary, rabbitDens, returningAnimals
 
     print ('night')
@@ -190,7 +193,7 @@ def night_s():
         if rabbit.energy > rabbit.reproduciton*rabbit.maxEnergy:
             #rabbit.backToDen(bg.image ,rabbit.den[0], rabbit.den[1])
             rabbit.findClosestDen(rabbitDens)
-
+            rabbit.den.animals.append(rabbit)
             clearMap(rabbit.rect.left,rabbit.rect.top, rabbit.rect.center[0], rabbit.rect.center[1], rabbit.rect.h)
 
             #########
@@ -210,6 +213,7 @@ def night_s():
         else:
             #rabbit.backToDen(bg.image ,rabbit.den[0], rabbit.den[1])
             rabbit.findClosestDen(rabbitDens)
+            rabbit.den.animals.append(rabbit)
             clearMap(rabbit.oldPosition[0],rabbit.oldPosition[1], rabbit.oldCenter[0], rabbit.oldCenter[1], rabbit.rect.h)
             #markMap(rabbit)
             returningAnimals.append(rabbit)
@@ -219,6 +223,7 @@ def night_s():
         if wolf.energy > wolf.reproduciton*wolf.maxEnergy:
             #wolf.backToDen(bg.image ,wolf.den[0], wolf.den[1])
             wolf.findClosestDen(wolfDens)
+            wolf.den.animals.append(wolf)
             wolf.reproduce(wolfs, wlf.wolf, objectsIndex, objectsDictionary)
             objectsIndex += 1
             returningAnimals.append(wolf)
@@ -230,6 +235,7 @@ def night_s():
         
         else:
             wolf.findClosestDen(wolfDens)
+            wolf.den.animals.append(wolf)
             returningAnimals.append(wolf)
 
     createFood(500)
@@ -251,10 +257,10 @@ def main():
             turn += 1
             print (turn)
         
-        night_s()
+        night_1()
         while len(returningAnimals) > 0:
             clock.tick(SPEED)
-            night_d()
+            night_2()
 
         turn = 1
         #if turn == 50:

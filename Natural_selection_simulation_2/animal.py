@@ -27,9 +27,10 @@ class animal(object):
         self.oldPosition = (-1,-1)
         self.oldCenter = (-1,-1)
         self.age = 0
-        self.family = -1
+        self.knowledge = ()
         self.den = den
         self.eaten = []
+
 
     def getPosition(self):
         return self.rect.left, self.rect.top

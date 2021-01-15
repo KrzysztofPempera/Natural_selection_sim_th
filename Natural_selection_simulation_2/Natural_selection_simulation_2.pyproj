@@ -27,10 +27,10 @@
     <Compile Include="carrot.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="q.py">
+    <Compile Include="dens.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="dens.py">
+    <Compile Include="test.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="rabbit.py">
