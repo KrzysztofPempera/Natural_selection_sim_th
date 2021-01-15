@@ -4,6 +4,7 @@ import numpy as np
 import math
 import json
 
+
 with open('para.json', 'r') as para:
     config = json.load(para)
 
@@ -28,7 +29,7 @@ class animal(object):
         self.age = 0
         self.family = -1
         self.den = den
-        
+        self.eaten = []
 
     def getPosition(self):
         return self.rect.left, self.rect.top

@@ -140,7 +140,7 @@ def animalBehavior(animal, targets):
 
         target = objectsDictionary.get(eat)
         if target.dead != True:
-
+            animal.eaten.append(target.rect.center)
             clearMap(target.rect.left,target.rect.top,target.rect.center[0], target.rect.center[1], target.rect.h)
             screen.blit(bg.image, target.rect, target.rect)
             objectsDictionary.pop(eat)
