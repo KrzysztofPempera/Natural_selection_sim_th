@@ -101,7 +101,6 @@ def createAnimals(nrabbits, nwolfs):
         rabbits.append(rabbit)
         objectsDictionary[rabbit.index] = rabbit
         objectsIndex += 1
-        markMap(rabbit)
 
     for i in range(nwolfs):
         wIndex = 'w' + str(objectsIndex)
@@ -172,7 +171,12 @@ def day():
 
 
 def night_3():
-    print('ten')
+    for den in rabbitDens:
+        den.shareKnowledge()
+        den.clearDen()
+    for den in wolfDens:
+        den.shareKnowledge()
+        den.clearDen()
 
 def night_2():
     for animal in list(returningAnimals):
@@ -194,6 +198,7 @@ def night_1():
             #rabbit.backToDen(bg.image ,rabbit.den[0], rabbit.den[1])
             rabbit.findClosestDen(rabbitDens)
             rabbit.den.animals.append(rabbit)
+            clearMap(rabbit.oldPosition[0],rabbit.oldPosition[1], rabbit.oldCenter[0], rabbit.oldCenter[1], rabbit.rect.h)
             clearMap(rabbit.rect.left,rabbit.rect.top, rabbit.rect.center[0], rabbit.rect.center[1], rabbit.rect.h)
 
             #########
@@ -204,6 +209,7 @@ def night_1():
             returningAnimals.append(rabbit)
 
         elif rabbit.energy <= 0:
+            clearMap(rabbit.oldPosition[0],rabbit.oldPosition[1], rabbit.oldCenter[0], rabbit.oldCenter[1], rabbit.rect.h)
             clearMap(rabbit.rect.left, rabbit.rect.top, rabbit.rect.center[0], rabbit.rect.center[1], rabbit.rect.h)
             rabbit.dead = True
             rabbits.remove(rabbit)
@@ -215,6 +221,7 @@ def night_1():
             rabbit.findClosestDen(rabbitDens)
             rabbit.den.animals.append(rabbit)
             clearMap(rabbit.oldPosition[0],rabbit.oldPosition[1], rabbit.oldCenter[0], rabbit.oldCenter[1], rabbit.rect.h)
+            clearMap(rabbit.rect.left,rabbit.rect.top, rabbit.rect.center[0], rabbit.rect.center[1], rabbit.rect.h)
             #markMap(rabbit)
             returningAnimals.append(rabbit)
     
@@ -238,7 +245,7 @@ def night_1():
             wolf.den.animals.append(wolf)
             returningAnimals.append(wolf)
 
-    createFood(500)
+    createFood(100)
     drawScreen(screen)
 
 
@@ -261,6 +268,7 @@ def main():
         while len(returningAnimals) > 0:
             clock.tick(SPEED)
             night_2()
+        night_3()
 
         turn = 1
         #if turn == 50:

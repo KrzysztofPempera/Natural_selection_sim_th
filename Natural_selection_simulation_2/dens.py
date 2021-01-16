@@ -12,22 +12,30 @@ class den(object):
     def getPosition(self):
         return self.posx, self.posy
 
-    def findFittest(self, arAnimals):
-        alpha = arAnimals[0]
-        maxEaten = len(arAnimals[0].eaten)
+    def __findFittest(self, arAnimals):
+        if arAnimals:
+            alpha = arAnimals[0]
+            maxEaten = len(arAnimals[0].eaten)
 
-        for animal in arAnimals:
-            if len(animal.eaten) > maxEaten:
-                maxEaten = len(animal.eaten)
-                alpha = animal
-        return alpha 
+            for animal in arAnimals:
+                if len(animal.eaten) > maxEaten:
+                    maxEaten = len(animal.eaten)
+                    alpha = animal
+            return alpha
+        else:
+            return None
+            
 
-    def createHuntingGrounds(self, animal):
+    def __createHuntingGrounds(self, animal):
         lastLocations = animal.eaten[-3:]
         return lastLocations
 
     def shareKnowledge(self):
-        fittest = self.fittest(animals)
-        huntingGrounds = self.huntingGrounds(fittest)
-        for animal in animals:
-            animal.knowledge =  rnd.choice(huntingGrounds)
+        fittest = self.__findFittest(self.animals)
+        if fittest and fittest.eaten:
+            huntingGrounds = self.__createHuntingGrounds(fittest)
+            for animal in self.animals:
+                animal.knowledge =  rnd.choice(huntingGrounds)
+
+    def clearDen(self):
+        self.animals.clear()
