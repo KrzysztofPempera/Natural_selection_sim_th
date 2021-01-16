@@ -45,9 +45,8 @@ class animal(object):
     def calcDistance(self, a, b):
         return np.sqrt((b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2)
 
-    def createVelocity(self, target):
+    def createVelocity(self, targetPosition):
         animalPosition = self.getPosition()
-        targetPosition = target.getPosition()
 
         desired = np.subtract(targetPosition, animalPosition)
 
@@ -72,7 +71,7 @@ class animal(object):
             parameter += rnd.choice(mutationPosibilities)
         return parameter
 
-    def reproduce(self, referenceList, animal, objectsIndex, objectsDictionary):
+    def reproduce(self, referenceList, animal, objectsIndex, objectsDictionary, dens):
         self.energy = math.floor(self.energy*config['REPRODUCTION_COST'])
         aPosition = self.den.getPosition()
 
@@ -86,6 +85,7 @@ class animal(object):
         
         newIndex = self.type + str(objectsIndex)
         newAnimal = animal(self.surface,newIndex,  aPosition[0], aPosition[1], newMs, newSense, self.den)
+        dens.append(newAnimal)
         referenceList.append(newAnimal)
         objectsDictionary[newAnimal.index] = newAnimal
 
@@ -171,10 +171,24 @@ class animal(object):
         else:
             return self.wanderingDirection()
 
+    def followKnowledge(self):
+        velocity = self.createVelocity(self.knowledge)
+
+        self.oldPosition = self.getPosition()
+        self.oldCenter = self.rect.center
+        self.rect.left = (self.rect.left + velocity[0]) % 800
+        self.rect.top = (self.rect.top + velocity [1]) % 800
+
+        if self.knowledge == self.getPosition():
+            self.knowledge = None
+
     def wander(self):
-            newPosition = self.wanderingDirection()
-            self.rect.left = newPosition[0] % 800
-            self.rect.top = newPosition[1] % 800
+            if self.knowledge:
+                self.followKnowledge()
+            else:
+                newPosition = self.wanderingDirection()
+                self.rect.left = newPosition[0] % 800
+                self.rect.top = newPosition[1] % 800
     
     def findClosestDen(self, dens):
         closest = self.calcDistance(self.getPosition(), self.den.getPosition())
@@ -185,7 +199,7 @@ class animal(object):
                 self.den = den
 
     def moveBackToDen(self, bg):
-        velocity = self.createVelocity(self.den)
+        velocity = self.createVelocity(self.den.getPosition())
 
         self.oldPosition = self.getPosition()
         self.oldCenter = self.rect.center
@@ -201,7 +215,7 @@ class animal(object):
 
         elif self.wandering == False:
             if self.target.dead == False:
-                velocity = self.createVelocity(self.target)
+                velocity = self.createVelocity(self.target.getPosition())
                 if velocity[0] == 0 and velocity[1] == 0:
                     self.wandering = True
                     self.wander()

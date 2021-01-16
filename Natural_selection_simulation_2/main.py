@@ -204,7 +204,7 @@ def night_1():
             #########
             #markMap(rabbit)
             
-            rabbit.reproduce(rabbits, rb.rabbit, objectsIndex, objectsDictionary)
+            rabbit.reproduce(rabbits, rb.rabbit, objectsIndex, objectsDictionary, rabbit.den.animals)
             objectsIndex += 1 
             returningAnimals.append(rabbit)
 
@@ -231,7 +231,7 @@ def night_1():
             #wolf.backToDen(bg.image ,wolf.den[0], wolf.den[1])
             wolf.findClosestDen(wolfDens)
             wolf.den.animals.append(wolf)
-            wolf.reproduce(wolfs, wlf.wolf, objectsIndex, objectsDictionary)
+            wolf.reproduce(wolfs, wlf.wolf, objectsIndex, objectsDictionary, wolf.den.animals)
             objectsIndex += 1
             returningAnimals.append(wolf)
         elif wolf.energy <= 0:
