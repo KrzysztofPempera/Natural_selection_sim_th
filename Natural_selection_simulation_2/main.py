@@ -85,10 +85,16 @@ def drawScreen(surface):
 
 def createFood(n):
     global objectsIndex, indexMap, objectsDictionary
+    locations = {}
+    locations['forest'] = [1,300,1,350]
+    locations['plains1'] = [311,WIDTH-11,1,350]
+    locations['plains2'] = [1,WIDTH-11, 350, HEIGHT-11]
+    locationsKeys = ['forest','plains1','plains2']
     for i in range(n):
         cIndex = 'c'+ str(objectsIndex)
-   
-        carrot = crt.carrot(screen, cIndex, 1, WIDTH - 11, 1, HEIGHT - 11)
+        location = rnd.choices(locationsKeys,weights= [1,7,7])
+        location = locations[location[0]]
+        carrot = crt.carrot(screen, cIndex, location[0], location[1], location[2], location[3])
     
         food.append(carrot)
         objectsDictionary[carrot.index] =  carrot
