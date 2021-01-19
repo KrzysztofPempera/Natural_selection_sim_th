@@ -1,12 +1,16 @@
 import random as  rnd
+import pygame as pg
 
 class den(object):
 
-    def __init__(self, posx, posy):
+    def __init__(self, posx, posy, image):
 
         self.posx = posx
         self.posy = posy
-        
+        self.image = pg.image.load(image).convert()
+        self.rect = self.image.get_rect()
+        self.rect.left = posx
+        self.rect.top = posy
         self.animals = []
 
     def getPosition(self):

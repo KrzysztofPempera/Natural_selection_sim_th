@@ -52,7 +52,9 @@
     <Content Include="Carrot.png" />
     <Content Include="para.json" />
     <Content Include="Rabbit.png" />
+    <Content Include="rabbitDen.png" />
     <Content Include="Wolf.png" />
+    <Content Include="wolfDen.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

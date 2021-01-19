@@ -38,8 +38,8 @@ rabbits = []
 wolfs = []
 indexMap = [['g' for i in range (800)] for j in range (800)]
 turn = 1
-rabbitDens = [dn.den(100,100), dn.den(100, 700), dn.den(700, 100), dn.den(700, 700)]
-wolfDens = [dn.den(400,400), dn.den(200,200), dn.den(600,600)]
+rabbitDens = [dn.den(100,100,'rabbitDen.png'), dn.den(100, 700,'rabbitDen.png'), dn.den(700, 100,'rabbitDen.png'), dn.den(700, 700,'rabbitDen.png')]
+wolfDens = [dn.den(400,400, 'wolfDen.png'), dn.den(200,200, 'wolfDen.png'), dn.den(600,600, 'wolfDen.png')]
 
 #def createPerimeter(x,y,h):
 #    perimeter = []
@@ -77,7 +77,8 @@ def drawScreen(surface):
         surface.blit(rabbit.image, rabbit.rect)
     for wolf in wolfs:
         surface.blit(wolf.image, wolf.rect)
-
+    for den in list(rabbitDens+wolfDens):
+        surface.blit(den.image, den.rect)
     pg.display.update()
 
 def createFood(n):
@@ -113,7 +114,7 @@ def createAnimals(nrabbits, nwolfs):
 
 #print(objectsDictionary)
 createFood(1800)
-createAnimals(8, 3)
+createAnimals(1000, 3)
 
 ###NIGHT
 #def animalBehavior(animals, target):
