@@ -39,7 +39,7 @@ wolfs = []
 indexMap = [['g' for i in range (800)] for j in range (800)]
 turn = 1
 rabbitDens = [dn.den(100,100,'rabbitDen.png'), dn.den(100, 700,'rabbitDen.png'), dn.den(700, 100,'rabbitDen.png'), dn.den(700, 700,'rabbitDen.png')]
-wolfDens = [dn.den(400,400, 'wolfDen.png'), dn.den(200,200, 'wolfDen.png'), dn.den(600,600, 'wolfDen.png')]
+wolfDens = [dn.den(500,300, 'wolfDen.png'), dn.den(200,200, 'wolfDen.png'), dn.den(600,600, 'wolfDen.png')]
 
 #def createPerimeter(x,y,h):
 #    perimeter = []
@@ -114,7 +114,7 @@ def createAnimals(nrabbits, nwolfs):
 
 #print(objectsDictionary)
 createFood(1800)
-createAnimals(1000, 3)
+createAnimals(30, 3)
 
 ###NIGHT
 #def animalBehavior(animals, target):
@@ -133,7 +133,7 @@ createAnimals(1000, 3)
 
 def animalBehavior(animal, targets):
 
-    animal.move(bg.image, indexMap, objectsDictionary)
+    animal.move(bg.image, indexMap, objectsDictionary, wolfDens)
 
     eat = animal.selfScan(indexMap)
     if eat[0] == animal.prey:

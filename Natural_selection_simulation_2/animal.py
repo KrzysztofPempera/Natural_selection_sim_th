@@ -29,6 +29,7 @@ class animal(object):
         self.age = 0
         self.knowledge = ()
         self.den = den
+        self.negVelocity = False
         self.eaten = []
 
 
@@ -56,8 +57,14 @@ class animal(object):
         desired = desired * self.ms
         desired = (math.floor(desired[0]) if desired[0] < 0 else math.ceil(desired[0]) ,math.floor(desired[1]) if desired[1] < 0 else math.ceil(desired[1]))
 
-        if dCheck > 400:
+        if dCheck > 500 and self.negVelocity == True:         
             return np.negative(desired)
+        elif dCheck < 500 and self.negVelocity == True:
+            self.negVelocity = False
+            return desired
+        elif dCheck > 500 and self.negVelocity == False:
+            self.negVelocity = True
+            return  np.negative(desired)
         elif dCheck <= self.ms or dCheck <= 1:
             return np.subtract(targetPosition, animalPosition)
         else:
@@ -208,7 +215,7 @@ class animal(object):
         self.surface.blit(bg, (self.oldPosition[0], self.oldPosition[1]))
 
 
-    def move(self, bg, indexMap, objectsDictionary):
+    def move(self, bg, indexMap, objectsDictionary, wolfDens):
         if self.wandering == True:
             self.wander()
             self.seek(indexMap, objectsDictionary)
