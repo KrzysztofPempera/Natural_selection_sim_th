@@ -57,7 +57,7 @@ class wolf(animal):
             else:
                 self.travelToNextDen(wolfDens)
 
-    def move(self, bg, indexMap, objectsDictionary, wolfDens):
+    def move(self, indexMap, objectsDictionary, wolfDens):
         if self.wandering == True:
             self.wander(wolfDens)
             self.seek(indexMap, objectsDictionary)
@@ -78,5 +78,4 @@ class wolf(animal):
                 self.wandering = True
                 self.wander(wolfDens)
             
-        self.surface.blit(bg, (self.oldPosition[0], self.oldPosition[1]))
         self.energy -= self.ms

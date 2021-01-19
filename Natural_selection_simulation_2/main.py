@@ -27,8 +27,8 @@ pg.init()
 clock = pg.time.Clock()
 screen = pg.display.set_mode([WIDTH,HEIGHT])
 pg.display.set_caption("Simulation")
-bg = sp.sprite('background.png', [0,0])
-screen.blit(bg.image, bg.rect)
+bg = pg.image.load('backgroundForest.png')
+screen.blit(bg,(0,0))
 
 returningAnimals = []
 objectsIndex = 1
@@ -71,6 +71,8 @@ def clearMap(x,y,x2,y2,h):
     #        indexMap[(y + i) % 800][(x + j) % 800] = 'g'
 
 def drawScreen(surface):
+    surface.blit(bg,(0,0))
+
     for carrot in food:
         surface.blit(carrot.image, carrot.rect)
     for rabbit in rabbits:
@@ -133,7 +135,7 @@ createAnimals(30, 3)
 
 def animalBehavior(animal, targets):
 
-    animal.move(bg.image, indexMap, objectsDictionary, wolfDens)
+    animal.move(indexMap, objectsDictionary, wolfDens)
 
     eat = animal.selfScan(indexMap)
     if eat[0] == animal.prey:
@@ -142,7 +144,6 @@ def animalBehavior(animal, targets):
         if target.dead != True:
             animal.eaten.append(target.rect.center)
             clearMap(target.rect.left,target.rect.top,target.rect.center[0], target.rect.center[1], target.rect.h)
-            screen.blit(bg.image, target.rect, target.rect)
             objectsDictionary.pop(eat)
             target.dead = True
             animal.energy = (animal.energy + target.energyRep) % animal.maxEnergy
@@ -181,7 +182,7 @@ def night_3():
 
 def night_2():
     for animal in list(returningAnimals):
-        animal.moveBackToDen(bg.image)
+        animal.moveBackToDen()
         if animal.getPosition() == animal.den.getPosition():
             returningAnimals.remove(animal)
     drawScreen(screen)
@@ -215,7 +216,6 @@ def night_1():
             rabbit.dead = True
             rabbits.remove(rabbit)
             objectsDictionary.pop(rabbit.index)
-            rabbit.surface.blit(bg.image, (rabbit.getPosition()))
 
         else:
             #rabbit.backToDen(bg.image ,rabbit.den[0], rabbit.den[1])
@@ -239,7 +239,6 @@ def night_1():
             wolf.dead = True
             wolfs.remove(wolf)
             objectsDictionary.pop(wolf.index)
-            wolf.surface.blit(bg.image, (wolf.getPosition()))
         
         else:
             wolf.findClosestDen(wolfDens)

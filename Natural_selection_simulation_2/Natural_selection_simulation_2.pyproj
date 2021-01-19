@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Background.png" />
+    <Content Include="backgroundForest.png" />
     <Content Include="Carrot.png" />
     <Content Include="para.json" />
     <Content Include="Rabbit.png" />

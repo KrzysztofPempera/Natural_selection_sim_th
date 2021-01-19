@@ -205,17 +205,16 @@ class animal(object):
                 closest = n
                 self.den = den
 
-    def moveBackToDen(self, bg):
+    def moveBackToDen(self):
         velocity = self.createVelocity(self.den.getPosition())
 
         self.oldPosition = self.getPosition()
         self.oldCenter = self.rect.center
         self.rect.left = (self.rect.left + velocity[0]) % 800
         self.rect.top = (self.rect.top + velocity [1]) % 800
-        self.surface.blit(bg, (self.oldPosition[0], self.oldPosition[1]))
 
 
-    def move(self, bg, indexMap, objectsDictionary, wolfDens):
+    def move(self, indexMap, objectsDictionary, wolfDens):
         if self.wandering == True:
             self.wander()
             self.seek(indexMap, objectsDictionary)
@@ -236,6 +235,5 @@ class animal(object):
                 self.wandering = True
                 self.wander()
             
-        self.surface.blit(bg, (self.oldPosition[0], self.oldPosition[1]))
         self.energy -= self.ms
                         
