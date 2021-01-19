@@ -38,8 +38,8 @@ rabbits = []
 wolfs = []
 indexMap = [['g' for i in range (800)] for j in range (800)]
 turn = 1
-rabbitDens = [dn.den(100,100,'rabbitDen.png'), dn.den(100, 700,'rabbitDen.png'), dn.den(700, 100,'rabbitDen.png'), dn.den(700, 700,'rabbitDen.png')]
-wolfDens = [dn.den(500,300, 'wolfDen.png'), dn.den(200,200, 'wolfDen.png'), dn.den(600,600, 'wolfDen.png')]
+rabbitDens = [dn.den(100,390,'rabbitDen.png'), dn.den(100, 700,'rabbitDen.png'), dn.den(700, 100,'rabbitDen.png'), dn.den(700, 700,'rabbitDen.png')]
+wolfDens = [dn.den(400,500, 'wolfDen.png'), dn.den(450,100, 'wolfDen.png'), dn.den(650,360, 'wolfDen.png')]
 
 #def createPerimeter(x,y,h):
 #    perimeter = []
