@@ -31,7 +31,7 @@ class animal(object):
         self.den = den
         self.negVelocity = False
         self.eaten = []
-
+        self.debuff = 1
 
     def getPosition(self):
         return self.rect.left, self.rect.top
@@ -48,13 +48,13 @@ class animal(object):
 
     def createVelocity(self, targetPosition):
         animalPosition = self.getPosition()
-
+        ms = math.ceil(self.ms * self.debuff)
         desired = np.subtract(targetPosition, animalPosition)
 
         dCheck = math.ceil(math.sqrt((desired[0]**2)+(desired[1]**2)))
 
         desired = self.normalize(desired)
-        desired = desired * self.ms
+        desired = desired * ms
         desired = (math.floor(desired[0]) if desired[0] < 0 else math.ceil(desired[0]) ,math.floor(desired[1]) if desired[1] < 0 else math.ceil(desired[1]))
 
         if dCheck > 500 and self.negVelocity == True:         
@@ -65,7 +65,7 @@ class animal(object):
         elif dCheck > 500 and self.negVelocity == False:
             self.negVelocity = True
             return  np.negative(desired)
-        elif dCheck <= self.ms or dCheck <= 1:
+        elif dCheck <= ms or dCheck <= 1:
             return np.subtract(targetPosition, animalPosition)
         else:
             return desired
@@ -99,7 +99,7 @@ class animal(object):
 
     def search(self, indexMap):
         center = self.rect.center
-        sense = self.sense
+        sense = math.ceil(self.sense * self.debuff)
         target = 'g'
         #topleft - topright
         for i in range((center[0] - sense) % 800, (center[0] + sense) % 800):
@@ -142,11 +142,10 @@ class animal(object):
         else:
             self.wandering = True
 
-    def selfScan(self, indexMap):
+    def selfScan(self, indexMap, terrainMap):
         x = self.rect.left
         y = self.rect.top
         h = self.rect.h
-
         #scanningArea = [(self.rect.left, self.rect.top), (self.rect.left, self.rect.bottom), (self.rect.right, self.rect.top), (self.rect.right, self.rect.bottom), 
         #                (self.rect.left + int(h/2), self.rect.top), (self.rect.left + int(h/2), self.rect.bottom), (self.rect.left, self.rect.top - int(h/2)),
         #               (self.rect.right, self.rect.top  - int(h/2)), (self.rect.center)]
@@ -155,6 +154,11 @@ class animal(object):
         #    if indexMap[area[1]%800][area[0]%800][0] == self.prey:
         #        return indexMap[area[1]%800][area[0]%800]
 
+        if terrainMap[self.rect.center[0]%800][self.rect.center[1]%800] == 1:
+            self.debuff = 0.10
+        else:
+            self.debuff = 1
+
         for i in range(y, (y + h + 1) % 800):
             for j in range(x, (x + h +1) % 800):
                 if indexMap[i][j][0] == self.prey:
@@ -162,7 +166,8 @@ class animal(object):
         return 'g'
 
     def getNewPosition(self, position):
-        moves = ((0,self.ms),(0,-self.ms),(self.ms,0),(-self.ms,0), (self.ms,self.ms), (self.ms,-self.ms), (-self.ms,self.ms), (-self.ms,-self.ms))
+        ms = math.ceil(self.ms * self.debuff)
+        moves = ((0,ms),(0,-ms),(ms,0),(-ms,0), (ms,ms), (ms,-ms), (-ms,ms), (-ms,-ms))
         nextMove = moves[rnd.randrange(len(moves))]
 
         newPosition = (position[0] + nextMove[0],position[1] + nextMove[1])
@@ -215,6 +220,8 @@ class animal(object):
 
 
     def move(self, indexMap, objectsDictionary, wolfDens):
+        ms = math.ceil(self.ms * self.debuff)
+
         if self.wandering == True:
             self.wander()
             self.seek(indexMap, objectsDictionary)
@@ -235,5 +242,5 @@ class animal(object):
                 self.wandering = True
                 self.wander()
             
-        self.energy -= self.ms
+        self.energy -= ms
                         

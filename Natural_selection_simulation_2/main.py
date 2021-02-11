@@ -37,6 +37,11 @@ food = []
 rabbits = []
 wolfs = []
 indexMap = [['g' for i in range (800)] for j in range (800)]
+terrainMap = [[0 for i in range (800)] for j in range (800)]
+for i in range (350):
+    for j in range(350):
+        terrainMap[i][j] = 1
+
 turn = 1
 rabbitDens = [dn.den(100,390,'rabbitDen.png'), dn.den(100, 700,'rabbitDen.png'), dn.den(700, 100,'rabbitDen.png'), dn.den(700, 700,'rabbitDen.png')]
 wolfDens = [dn.den(400,500, 'wolfDen.png'), dn.den(450,100, 'wolfDen.png'), dn.den(650,360, 'wolfDen.png')]
@@ -92,7 +97,7 @@ def createFood(n):
     locationsKeys = ['forest','plains1','plains2']
     for i in range(n):
         cIndex = 'c'+ str(objectsIndex)
-        location = rnd.choices(locationsKeys,weights= [1,7,7])
+        location = rnd.choices(locationsKeys,weights= [1,5,7])
         location = locations[location[0]]
         carrot = crt.carrot(screen, cIndex, location[0], location[1], location[2], location[3])
     
@@ -143,7 +148,7 @@ def animalBehavior(animal, targets):
 
     animal.move(indexMap, objectsDictionary, wolfDens)
 
-    eat = animal.selfScan(indexMap)
+    eat = animal.selfScan(indexMap, terrainMap)
     if eat[0] == animal.prey:
 
         target = objectsDictionary.get(eat)
@@ -188,6 +193,7 @@ def night_3():
 
 def night_2():
     for animal in list(returningAnimals):
+        animal.debuff = 1
         animal.moveBackToDen()
         if animal.getPosition() == animal.den.getPosition():
             returningAnimals.remove(animal)
@@ -264,7 +270,7 @@ def main():
         
         clock.tick(SPEED)
 
-        while turn < 100:
+        while turn > 0:
             clock.tick(SPEED)
             day()
             turn += 1
