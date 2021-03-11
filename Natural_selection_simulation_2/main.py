@@ -127,7 +127,7 @@ def createAnimals(nrabbits, nwolfs):
 
 #print(objectsDictionary)
 createFood(1800)
-createAnimals(30, 3)
+createAnimals(60, 10)
 
 ###NIGHT
 #def animalBehavior(animals, target):
@@ -145,21 +145,21 @@ createAnimals(30, 3)
 #            animal.reproduce(animals, newAnimal, objectsIndex, objectsDictionary)
 
 def animalBehavior(animal, targets):
+    if animal.hidden == False:
+        animal.move(indexMap, objectsDictionary, wolfDens, rabbitDens)
 
-    animal.move(indexMap, objectsDictionary, wolfDens)
+        eat = animal.selfScan(indexMap, terrainMap)
+        if eat[0] == animal.prey:
 
-    eat = animal.selfScan(indexMap, terrainMap)
-    if eat[0] == animal.prey:
-
-        target = objectsDictionary.get(eat)
-        if target.dead != True:
-            animal.eaten.append(target.rect.center)
-            clearMap(target.rect.left,target.rect.top,target.rect.center[0], target.rect.center[1], target.rect.h)
-            objectsDictionary.pop(eat)
-            target.dead = True
-            animal.energy = (animal.energy + target.energyRep) % animal.maxEnergy
-            targets.remove(target)
-            animal.wandering = True
+            target = objectsDictionary.get(eat)
+            if target.dead != True:
+                animal.eaten.append(target.rect.center)
+                clearMap(target.rect.left,target.rect.top,target.rect.center[0], target.rect.center[1], target.rect.h)
+                objectsDictionary.pop(eat)
+                target.dead = True
+                animal.energy = (animal.energy + target.energyRep) % animal.maxEnergy
+                targets.remove(target)
+                animal.wandering = True
 
 def day():
     global objectsIndex, indexMap, objectsDictionary
@@ -207,6 +207,7 @@ def night_1():
     for rabbit in list(rabbits):
 
 
+        rabbit.hidden = False
 
         if rabbit.energy > rabbit.reproduciton*rabbit.maxEnergy:
             #rabbit.backToDen(bg.image ,rabbit.den[0], rabbit.den[1])

@@ -32,6 +32,7 @@ class animal(object):
         self.negVelocity = False
         self.eaten = []
         self.debuff = 1
+        self.hidden = False
 
     def getPosition(self):
         return self.rect.left, self.rect.top
@@ -219,7 +220,7 @@ class animal(object):
         self.rect.top = (self.rect.top + velocity [1]) % 800
 
 
-    def move(self, indexMap, objectsDictionary, wolfDens):
+    def move(self, indexMap, objectsDictionary, wolfDens, rabbitDens):
         ms = math.ceil(self.ms * self.debuff)
 
         if self.wandering == True:

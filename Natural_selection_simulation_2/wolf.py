@@ -2,6 +2,7 @@ import pygame as pg
 from animal import animal
 import random as rnd
 import json
+import math
 
 with open('para.json', 'r') as para:
     config = json.load(para)
@@ -57,13 +58,18 @@ class wolf(animal):
             else:
                 self.travelToNextDen(wolfDens)
 
-    def move(self, indexMap, objectsDictionary, wolfDens):
+    def move(self, indexMap, objectsDictionary, wolfDens, rabbitDens):
+        ms = math.ceil(self.ms * self.debuff)
+
         if self.wandering == True:
             self.wander(wolfDens)
             self.seek(indexMap, objectsDictionary)
 
         elif self.wandering == False:
-            if self.target.dead == False:
+            if self.target.dead == False and self.target.hidden == False:
+                if self.target.danger == False and self.calcDistance(self.getPosition(), self.target.getPosition()) <= self.target.threatSense:
+                    self.target.danger = True
+                    self.target.threat = self
                 velocity = self.createVelocity(self.target.getPosition())
                 if velocity[0] == 0 and velocity[1] == 0:
                     self.wandering = True
@@ -74,8 +80,8 @@ class wolf(animal):
                     self.rect.left = (self.rect.left + velocity[0]) % 800
                     self.rect.top = (self.rect.top + velocity [1]) % 800
                 
-            elif self.target.dead == True:
+            elif self.target.dead == True or self.target.hidden == True:
                 self.wandering = True
                 self.wander(wolfDens)
             
-        self.energy -= self.ms
+        self.energy -= ms
