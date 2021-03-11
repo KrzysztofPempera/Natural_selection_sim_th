@@ -155,7 +155,7 @@ class animal(object):
         #        return indexMap[area[1]%800][area[0]%800]
 
         if terrainMap[self.rect.center[0]%800][self.rect.center[1]%800] == 1:
-            self.debuff = 0.10
+            self.debuff = 0.60
         else:
             self.debuff = 1
 
