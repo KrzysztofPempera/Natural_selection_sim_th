@@ -36,6 +36,8 @@ objectsDictionary = {}
 food = []
 rabbits = []
 wolfs = []
+pathMap = [[0 for i in range (800)] for j in range (800)]
+traceMap = [[0 for i in range (800)] for j in range (800)]
 indexMap = [['g' for i in range (800)] for j in range (800)]
 terrainMap = [[0 for i in range (800)] for j in range (800)]
 for i in range (350):
@@ -147,7 +149,7 @@ createAnimals(60, 10)
 def animalBehavior(animal, targets):
     if animal.hidden == False:
         animal.move(indexMap, objectsDictionary, wolfDens, rabbitDens)
-
+        animal.leaveTrace(traceMap)
         eat = animal.selfScan(indexMap, terrainMap)
         if eat[0] == animal.prey:
 
@@ -258,7 +260,7 @@ def night_1():
             wolf.den.animals.append(wolf)
             returningAnimals.append(wolf)
 
-    createFood(100)
+    createFood(200)
     drawScreen(screen)
 
 

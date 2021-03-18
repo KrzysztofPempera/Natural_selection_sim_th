@@ -219,6 +219,28 @@ class animal(object):
         self.rect.left = (self.rect.left + velocity[0]) % 800
         self.rect.top = (self.rect.top + velocity [1]) % 800
 
+    def leaveTrace(self, traceMap):
+        x = self.rect.left
+        y = self.rect.top
+        h = self.rect.h
+        #scanningArea = [(self.rect.left, self.rect.top), (self.rect.left, self.rect.bottom), (self.rect.right, self.rect.top), (self.rect.right, self.rect.bottom), 
+        #                (self.rect.left + int(h/2), self.rect.top), (self.rect.left + int(h/2), self.rect.bottom), (self.rect.left, self.rect.top - int(h/2)),
+        #               (self.rect.right, self.rect.top  - int(h/2)), (self.rect.center)]
+        
+        #for area in scanningArea:
+        #    if indexMap[area[1]%800][area[0]%800][0] == self.prey:
+        #        return indexMap[area[1]%800][area[0]%800]
+        mark = 0
+
+        if self.type == 'w':
+           mark = 1
+        elif self.type == 'r':
+            mark = -1 
+
+        for i in range(y, (y + h + 1) % 800):
+            for j in range(x, (x + h +1) % 800):
+                traceMap[j][i] += mark
+
 
     def move(self, indexMap, objectsDictionary, wolfDens, rabbitDens):
         ms = math.ceil(self.ms * self.debuff)
