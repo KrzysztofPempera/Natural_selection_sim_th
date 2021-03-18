@@ -187,10 +187,10 @@ def day():
 
 def night_3():
     for den in rabbitDens:
-        den.shareKnowledge()
+        den.shareKnowledge(traceMap, pathMap)
         den.clearDen()
     for den in wolfDens:
-        den.shareKnowledge()
+        den.shareKnowledge(traceMap, pathMap)
         den.clearDen()
 
 def night_2():
@@ -273,7 +273,7 @@ def main():
         
         clock.tick(SPEED)
 
-        while turn > 0:
+        while turn < 100:
             clock.tick(SPEED)
             day()
             turn += 1
