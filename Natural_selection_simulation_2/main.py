@@ -148,7 +148,7 @@ createAnimals(60, 10)
 
 def animalBehavior(animal, targets):
     if animal.hidden == False:
-        animal.move(indexMap, objectsDictionary, wolfDens, rabbitDens)
+        animal.move(indexMap, objectsDictionary, wolfDens, rabbitDens, pathMap)
         animal.leaveTrace(traceMap)
         eat = animal.selfScan(indexMap, terrainMap)
         if eat[0] == animal.prey:
@@ -186,12 +186,14 @@ def day():
 
 
 def night_3():
+    global traceMap
     for den in rabbitDens:
         den.shareKnowledge(traceMap, pathMap)
         den.clearDen()
     for den in wolfDens:
         den.shareKnowledge(traceMap, pathMap)
         den.clearDen()
+    traceMap = [[0 for i in range (800)] for j in range (800)]
 
 def night_2():
     for animal in list(returningAnimals):

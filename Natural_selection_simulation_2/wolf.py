@@ -58,7 +58,7 @@ class wolf(animal):
             else:
                 self.travelToNextDen(wolfDens)
 
-    def move(self, indexMap, objectsDictionary, wolfDens, rabbitDens):
+    def move(self, indexMap, objectsDictionary, wolfDens, rabbitDens, pathMap):
         ms = math.ceil(self.ms * self.debuff)
 
         if self.wandering == True:

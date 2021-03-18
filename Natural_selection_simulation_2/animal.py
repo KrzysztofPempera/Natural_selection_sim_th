@@ -166,42 +166,55 @@ class animal(object):
                     return indexMap[i][j]
         return 'g'
 
-    def getNewPosition(self, position):
-        ms = math.ceil(self.ms * self.debuff)
-        moves = ((0,ms),(0,-ms),(ms,0),(-ms,0), (ms,ms), (ms,-ms), (-ms,ms), (-ms,-ms))
-        nextMove = moves[rnd.randrange(len(moves))]
+    #def getNewPosition(self, position):
+    #    ms = math.ceil(self.ms * self.debuff)
+    #    moves = ((0,ms),(0,-ms),(ms,0),(-ms,0), (ms,ms), (ms,-ms), (-ms,ms), (-ms,-ms))
+    #    nextMove = moves[rnd.randrange(len(moves))]
 
-        newPosition = (position[0] + nextMove[0],position[1] + nextMove[1])
+    #    newPosition = (position[0] + nextMove[0],position[1] + nextMove[1])
+    #    return newPosition
+
+    #def wanderingDirection(self):
+    #    position = self.getPosition()
+    #    newPosition = self.getNewPosition(position)
+    #    if newPosition != self.oldPosition:
+    #        self.oldPosition = position
+    #        self.oldCenter = self.rect.center
+    #        return newPosition
+    #    else:
+    #        return self.wanderingDirection()
+
+    #def followKnowledge(self):
+    #    velocity = self.createVelocity(self.knowledge)
+
+    #    self.oldPosition = self.getPosition()
+    #    self.oldCenter = self.rect.center
+    #    self.rect.left = (self.rect.left + velocity[0]) % 800
+    #    self.rect.top = (self.rect.top + velocity [1]) % 800
+
+    #    if self.knowledge == self.getPosition():
+    #        self.knowledge = None
+
+    def __newPosition(self, moves, pathMap, position):
+        newMove = moves[rnd.randrange(len(moves))]
+        for move in moves:
+            bestPosition = ((position[0] + newMove[0])%800,(position[1] + newMove[1])%800)
+            newPosition = ((position[0] + move[0])%800,(position[1] + move[1])%800) 
+            if pathMap[newPosition[0]][newPosition[1]] < pathMap[bestPosition[0]][bestPosition[1]] and newPosition !=self.oldPosition :
+                newMove = move
+        newPosition = ((position[0] + newMove[0])%800,(position[1] + newMove[1])%800)
         return newPosition
 
-    def wanderingDirection(self):
-        position = self.getPosition()
-        newPosition = self.getNewPosition(position)
-        if newPosition != self.oldPosition:
-            self.oldPosition = position
-            self.oldCenter = self.rect.center
-            return newPosition
-        else:
-            return self.wanderingDirection()
+    def wander(self, pathMap):
+        ms = math.ceil(self.ms *self.debuff)
+        moves = ((0,ms),(0,-ms),(ms,0),(-ms,0), (ms,ms), (ms,-ms), (-ms,ms), (-ms,-ms))
 
-    def followKnowledge(self):
-        velocity = self.createVelocity(self.knowledge)
+        newPosition = self.__newPosition(moves, pathMap, self.getPosition())
 
         self.oldPosition = self.getPosition()
-        self.oldCenter = self.rect.center
-        self.rect.left = (self.rect.left + velocity[0]) % 800
-        self.rect.top = (self.rect.top + velocity [1]) % 800
-
-        if self.knowledge == self.getPosition():
-            self.knowledge = None
-
-    def wander(self):
-            if self.knowledge:
-                self.followKnowledge()
-            else:
-                newPosition = self.wanderingDirection()
-                self.rect.left = newPosition[0] % 800
-                self.rect.top = newPosition[1] % 800
+        self.oldCenter = self.rect.center 
+        self.rect.left = newPosition[0] % 800
+        self.rect.top = newPosition[1] % 800
     
     def findClosestDen(self, dens):
         closest = self.calcDistance(self.getPosition(), self.den.getPosition())
@@ -242,11 +255,11 @@ class animal(object):
                 traceMap[j][i] += mark
 
 
-    def move(self, indexMap, objectsDictionary, wolfDens, rabbitDens):
+    def move(self, indexMap, objectsDictionary, wolfDens, rabbitDens, pathMap):
         ms = math.ceil(self.ms * self.debuff)
 
         if self.wandering == True:
-            self.wander()
+            self.wander(pathMap)
             self.seek(indexMap, objectsDictionary)
 
         elif self.wandering == False:
@@ -254,7 +267,7 @@ class animal(object):
                 velocity = self.createVelocity(self.target.getPosition())
                 if velocity[0] == 0 and velocity[1] == 0:
                     self.wandering = True
-                    self.wander()
+                    self.wander(pathMap)
                 else:
                     self.oldPosition = self.getPosition()
                     self.oldCenter = self.rect.center
@@ -263,7 +276,7 @@ class animal(object):
                 
             elif self.target.dead == True:
                 self.wandering = True
-                self.wander()
+                self.wander(pathMap)
             
         self.energy -= ms
                         

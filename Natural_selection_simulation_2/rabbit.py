@@ -36,7 +36,7 @@ class rabbit(animal):
                 hideout = den
         return hideout                
 
-    def move(self, indexMap, objectsDictionary, wolfDens, rabbitDens):
+    def move(self, indexMap, objectsDictionary, wolfDens, rabbitDens, pathMap):
         ms = math.ceil(self.ms * self.debuff)
 
         if self.danger == True:
@@ -53,7 +53,7 @@ class rabbit(animal):
             self.rect.top = (self.rect.top + velocity [1]) % 800
 
         elif self.wandering == True:
-            self.wander()
+            self.wander(pathMap)
             self.seek(indexMap, objectsDictionary)
 
         elif self.wandering == False:
@@ -61,7 +61,7 @@ class rabbit(animal):
                 velocity = self.createVelocity(self.target.getPosition())
                 if velocity[0] == 0 and velocity[1] == 0:
                     self.wandering = True
-                    self.wander()
+                    self.wander(pathMap)
                 else:
                     self.oldPosition = self.getPosition()
                     self.oldCenter = self.rect.center
@@ -70,7 +70,7 @@ class rabbit(animal):
                 
             elif self.target.dead == True:
                 self.wandering = True
-                self.wander()
+                self.wander(pathMap)
             
         self.energy -= ms
                         
