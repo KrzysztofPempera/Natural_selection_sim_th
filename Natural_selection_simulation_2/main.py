@@ -21,6 +21,7 @@ WOLF_MOVEMENT_SPEED = config['WOLF_MOVEMENT_SPEED']
 WOLF_SENSE = config['WOLF_SENSE']
 RABBIT_SENSE = config['RABBIT_SENSE']
 CARROT_REP = config['CARROT_REP']
+RABBIT_THREAT = config['RABBIT_THREAT']
 
 pg.init()
 
@@ -113,7 +114,7 @@ def createAnimals(nrabbits, nwolfs):
     for i in range(nrabbits):
         rIndex = 'r' + str(objectsIndex)
         startingDen = rnd.choice(rabbitDens)
-        rabbit = rb.rabbit(screen, rIndex, startingDen.posx, startingDen.posy, RABBIT_MOVEMENT_SPEED, RABBIT_SENSE, startingDen)
+        rabbit = rb.rabbit(screen, rIndex, startingDen.posx, startingDen.posy, RABBIT_MOVEMENT_SPEED, RABBIT_SENSE, startingDen, RABBIT_THREAT)
         rabbits.append(rabbit)
         objectsDictionary[rabbit.index] = rabbit
         objectsIndex += 1
@@ -212,7 +213,7 @@ def night_1():
 
 
         rabbit.hidden = False
-
+        #rabbit.wandering = True
         if rabbit.energy > rabbit.reproduciton*rabbit.maxEnergy:
             #rabbit.backToDen(bg.image ,rabbit.den[0], rabbit.den[1])
             rabbit.findClosestDen(rabbitDens)
@@ -244,7 +245,7 @@ def night_1():
             returningAnimals.append(rabbit)
     
     for wolf in list(wolfs):
-
+       
         if wolf.energy > wolf.reproduciton*wolf.maxEnergy:
             #wolf.backToDen(bg.image ,wolf.den[0], wolf.den[1])
             wolf.findClosestDen(wolfDens)
@@ -275,7 +276,7 @@ def main():
         
         clock.tick(SPEED)
 
-        while turn < 100:
+        while turn < 150:
             clock.tick(SPEED)
             day()
             turn += 1

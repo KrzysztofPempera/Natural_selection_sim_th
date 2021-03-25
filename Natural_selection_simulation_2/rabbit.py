@@ -8,7 +8,7 @@ with open('para.json', 'r') as para:
 
 class rabbit(animal):
 
-    def __init__(self, surface, index, posx, posy, movementspeed, sense, den):
+    def __init__(self, surface, index, posx, posy, movementspeed, sense, den, threat):
         animal.__init__(self, surface, index, posx, posy, movementspeed, sense, den)
         self.image = pg.image.load('Rabbit.png').convert()
         self.rect = self.image.get_rect()
@@ -22,9 +22,29 @@ class rabbit(animal):
         self.maxEnergy = config['RABBIT_MAX_ENERGY']
         self.energyRep = config['RABBIT_ENERGY_REP']
         self.reproduciton = config['RABBIT_REPRODUCTION']
-        self.threatSense = 30
+        self.threatSense = threat
         self.danger = False
         self.threat = object
+
+    def reproduce(self, referenceList, animal, objectsIndex, objectsDictionary, dens):
+        self.energy = math.floor(self.energy*config['REPRODUCTION_COST'])
+        aPosition = self.den.getPosition()
+
+        newMs = self.mutate(self.ms)
+        newSense = self.mutate(self.sense)
+        newThreat = self.mutate(self.threatSense)
+        if newSense <=10:
+            newSense = 11
+        if newMs <= 0:
+            newMs = 1
+        
+        newIndex = self.type + str(objectsIndex)
+        newAnimal = animal(self.surface,newIndex,  aPosition[0], aPosition[1], newMs, newSense, self.den, newThreat)
+        dens.append(newAnimal)
+        referenceList.append(newAnimal)
+        objectsDictionary[newAnimal.index] = newAnimal
+
+
     
     def findHideout(self, dens, threat):
         closest = self.calcDistance(self.getPosition(), self.den.getPosition())

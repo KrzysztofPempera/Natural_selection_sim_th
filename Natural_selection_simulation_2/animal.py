@@ -85,7 +85,6 @@ class animal(object):
 
         newMs = self.mutate(self.ms)
         newSense = self.mutate(self.sense)
-
         if newSense <=10:
             newSense = 11
         if newMs <= 0:
