@@ -9,6 +9,7 @@ import sys
 import numpy as np
 import colours
 import json
+import csv
 
 with open('para.json', 'r') as para:
     config = json.load(para)
@@ -30,6 +31,12 @@ screen = pg.display.set_mode([WIDTH,HEIGHT])
 pg.display.set_caption("Simulation")
 bg = pg.image.load('backgroundForest.png')
 screen.blit(bg,(0,0))
+
+days = 0
+wolfCount = []
+rabbitCount = []
+foodCount = []
+
 
 returningAnimals = []
 objectsIndex = 1
@@ -267,9 +274,27 @@ def night_1():
     drawScreen(screen)
 
 
+def report(day, wolfCount, rabbitCount, foodCount):
+    with open('report.csv', 'a', newline='') as csvfile:
+        label = ['DAY','WOLF_COUNT','RABBIT_COUNT','FOOD_COUNT']
+        theWriter = csv.DictWriter(csvfile, fieldnames=label)
+        theWriter.writerow({'DAY':day,'WOLF_COUNT':wolfCount, 'RABBIT_COUNT':rabbitCount, 'FOOD_COUNT':foodCount})
+
+def night_0():
+    global rabbits, days, wolfs, wolfCount, rabbitCount, foodCount
+
+    rabbitC = len(rabbits)
+    wolfC = len(wolfs)
+    foodC = len(food)
+
+    report(days, wolfC, rabbitC, foodC)
+
+    wolfCount.append(wolfC)
+    rabbitCount.append(rabbitC)
+    foodCount.append(foodC)
 
 def main():
-    global turn, objectsIndex, indexMap, objectsDictionary, returningAnimals
+    global turn, days, objectsIndex, indexMap, objectsDictionary, returningAnimals
     running = True
 
     while running:
@@ -281,7 +306,9 @@ def main():
             day()
             turn += 1
             print (turn)
-        
+
+        days += 1 
+        night_0()
         night_1()
         while len(returningAnimals) > 0:
             clock.tick(SPEED)

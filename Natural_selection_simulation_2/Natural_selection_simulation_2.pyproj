@@ -54,6 +54,9 @@
     <Content Include="para.json" />
     <Content Include="Rabbit.png" />
     <Content Include="rabbitDen.png" />
+    <Content Include="report.csv">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="Wolf.png" />
     <Content Include="wolfDen.png" />
   </ItemGroup>
