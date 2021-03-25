@@ -54,11 +54,18 @@
     <Content Include="para.json" />
     <Content Include="Rabbit.png" />
     <Content Include="rabbitDen.png" />
-    <Content Include="report.csv">
+    <Content Include="reports\report.csv">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="reports\report_0.csv">
       <SubType>Code</SubType>
     </Content>
     <Content Include="Wolf.png" />
     <Content Include="wolfDen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="plots\" />
+    <Folder Include="reports\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

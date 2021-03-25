@@ -36,7 +36,11 @@ days = 0
 wolfCount = []
 rabbitCount = []
 foodCount = []
-
+rabbitMS = []
+rabbitS = []
+rabbitT = []
+wolfMS = []
+wolfS = []
 
 returningAnimals = []
 objectsIndex = 1
@@ -274,24 +278,54 @@ def night_1():
     drawScreen(screen)
 
 
-def report(day, wolfCount, rabbitCount, foodCount):
+def report(day, wolfCount, rabbitCount, foodCount, rMS, rS, rT, wMS, wS):
     with open('report.csv', 'a', newline='') as csvfile:
-        label = ['DAY','WOLF_COUNT','RABBIT_COUNT','FOOD_COUNT']
+        label = ['DAY','WOLF_COUNT','RABBIT_COUNT','FOOD_COUNT', 'RABBIT_MOVEMENT_SPEED', 'RABBIT_SENSE','RABBIT_THREAT', 'WOLF_MOVEMENT_SPEED', 'WOLF_SENSE']
         theWriter = csv.DictWriter(csvfile, fieldnames=label)
-        theWriter.writerow({'DAY':day,'WOLF_COUNT':wolfCount, 'RABBIT_COUNT':rabbitCount, 'FOOD_COUNT':foodCount})
+        theWriter.writerow({'DAY':day,'WOLF_COUNT':wolfCount, 'RABBIT_COUNT':rabbitCount, 'FOOD_COUNT':foodCount, 'RABBIT_MOVEMENT_SPEED':rMS, 'RABBIT_SENSE':rS, 'RABBIT_THREAT':rT,'WOLF_MOVEMENT_SPEED':wMS, 'WOLF_SENSE':wS})
 
 def night_0():
-    global rabbits, days, wolfs, wolfCount, rabbitCount, foodCount
+    global rabbits, days, wolfs, wolfCount, rabbitCount, foodCount, rabbitMS, rabbitS, rabbitT, wolfMS, wolfS
 
     rabbitC = len(rabbits)
     wolfC = len(wolfs)
     foodC = len(food)
 
-    report(days, wolfC, rabbitC, foodC)
+    temp = 0 
+    for rabbit in rabbits:
+        temp += rabbit.ms
+    rMS = int(temp/len(rabbits))  
+
+    temp = 0
+    for rabbit in rabbits:
+        temp += rabbit.sense
+    rS = int(temp/len(rabbits))
+
+    temp = 0
+    for rabbit in rabbits:
+        temp += rabbit.threatSense
+    rT = int(temp/len(rabbits))
+
+    temp = 0
+    for wolf in wolfs:
+        temp += wolf.ms
+    wMS = int(temp/len(wolfs))
+
+    temp = 0
+    for wolf in wolfs:
+        temp += wolf.sense
+    wS = int(temp/len(wolfs))
+
+    report(days, wolfC, rabbitC, foodC, rMS, rS, rT, wMS, wS)
 
     wolfCount.append(wolfC)
     rabbitCount.append(rabbitC)
     foodCount.append(foodC)
+    rabbitMS.append(rMS)
+    rabbitS.append(rS)
+    rabbitT.append(rT)
+    wolfMS.append(wMS)
+    wolfS.append(wS)
 
 def main():
     global turn, days, objectsIndex, indexMap, objectsDictionary, returningAnimals
