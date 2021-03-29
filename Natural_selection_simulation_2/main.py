@@ -10,13 +10,14 @@ import numpy as np
 import colours
 import json
 import csv
+from graph import plot
 
 with open('para.json', 'r') as para:
     config = json.load(para)
 
 WIDTH = 800
 HEIGHT = 800
-SPEED = 18
+SPEED = 50
 RABBIT_MOVEMENT_SPEED = config['RABBIT_MOVEMENT_SPEED']
 WOLF_MOVEMENT_SPEED = config['WOLF_MOVEMENT_SPEED']
 WOLF_SENSE = config['WOLF_SENSE']
@@ -291,30 +292,35 @@ def night_0():
     wolfC = len(wolfs)
     foodC = len(food)
 
-    temp = 0 
-    for rabbit in rabbits:
-        temp += rabbit.ms
-    rMS = int(temp/len(rabbits))  
+    temp = 0
+    if rabbits:
+        for rabbit in rabbits:
+            temp += rabbit.ms
+        rMS = int(temp/len(rabbits))  
 
     temp = 0
-    for rabbit in rabbits:
-        temp += rabbit.sense
-    rS = int(temp/len(rabbits))
+    if rabbits:
+        for rabbit in rabbits:
+            temp += rabbit.sense
+        rS = int(temp/len(rabbits))
 
     temp = 0
-    for rabbit in rabbits:
-        temp += rabbit.threatSense
-    rT = int(temp/len(rabbits))
+    if rabbits:
+        for rabbit in rabbits:
+            temp += rabbit.threatSense
+        rT = int(temp/len(rabbits))
 
     temp = 0
-    for wolf in wolfs:
-        temp += wolf.ms
-    wMS = int(temp/len(wolfs))
+    if wolfs:
+        for wolf in wolfs:
+            temp += wolf.ms
+        wMS = int(temp/len(wolfs))
 
     temp = 0
-    for wolf in wolfs:
-        temp += wolf.sense
-    wS = int(temp/len(wolfs))
+    if wolfs:
+        for wolf in wolfs:
+            temp += wolf.sense
+        wS = int(temp/len(wolfs))
 
     report(days, wolfC, rabbitC, foodC, rMS, rS, rT, wMS, wS)
 
@@ -328,7 +334,7 @@ def night_0():
     wolfS.append(wS)
 
 def main():
-    global turn, days, objectsIndex, indexMap, objectsDictionary, returningAnimals
+    global turn, days, objectsIndex, indexMap, objectsDictionary, returningAnimals, wolfCount, rabbitCount, foodCount, rabbitMS, rabbitS, rabbitT, wolfMS, wolfS 
     running = True
 
     while running:
@@ -359,6 +365,9 @@ def main():
             if event.type == pg.QUIT:
                 pg.quit()
                 sys.exit("quit")
-           
+        if days == 50:
+            running = False
+            pg.quit()
+            plot(wolfCount, rabbitCount, rabbitMS, rabbitS, rabbitT, wolfMS, wolfS, 11)     
 
 main()

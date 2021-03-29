@@ -30,6 +30,9 @@
     <Compile Include="dens.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="graph.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="test.py">
       <SubType>Code</SubType>
     </Compile>
@@ -56,9 +59,6 @@
     <Content Include="rabbitDen.png" />
     <Content Include="Wolf.png" />
     <Content Include="wolfDen.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="plots\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
