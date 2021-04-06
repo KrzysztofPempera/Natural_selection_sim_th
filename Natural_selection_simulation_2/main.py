@@ -15,6 +15,7 @@ from graph import plot
 with open('para.json', 'r') as para:
     config = json.load(para)
 
+
 WIDTH = 800
 HEIGHT = 800
 SPEED = 50
@@ -291,6 +292,8 @@ def night_0():
     rabbitC = len(rabbits)
     wolfC = len(wolfs)
     foodC = len(food)
+    wMS = 0
+    wS = 0
 
     temp = 0
     if rabbits:
