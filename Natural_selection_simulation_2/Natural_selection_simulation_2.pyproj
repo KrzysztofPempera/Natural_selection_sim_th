@@ -54,6 +54,9 @@
     <Content Include="Background.png" />
     <Content Include="backgroundForest.png" />
     <Content Include="Carrot.png" />
+    <Content Include="ident.json">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="para.json" />
     <Content Include="Rabbit.png" />
     <Content Include="rabbitDen.png" />

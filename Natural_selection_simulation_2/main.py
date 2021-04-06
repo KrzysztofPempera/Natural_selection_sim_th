@@ -10,10 +10,15 @@ import numpy as np
 import colours
 import json
 import csv
+import os
 from graph import plot
 
 with open('para.json', 'r') as para:
     config = json.load(para)
+
+with open ('ident.json', 'r') as jsonFile:
+    indent = json.load(jsonFile)
+    REPORT_ID = int(indent['id'])
 
 
 WIDTH = 800
@@ -337,7 +342,7 @@ def night_0():
     wolfS.append(wS)
 
 def main():
-    global turn, days, objectsIndex, indexMap, objectsDictionary, returningAnimals, wolfCount, rabbitCount, foodCount, rabbitMS, rabbitS, rabbitT, wolfMS, wolfS 
+    global turn, days, objectsIndex, indexMap, objectsDictionary, returningAnimals, wolfCount, rabbitCount, foodCount, rabbitMS, rabbitS, rabbitT, wolfMS, wolfS, REPORT_ID, indent
     running = True
 
     while running:
@@ -368,9 +373,14 @@ def main():
             if event.type == pg.QUIT:
                 pg.quit()
                 sys.exit("quit")
-        if days == 50:
+        if days == 2:
             running = False
             pg.quit()
-            plot(wolfCount, rabbitCount, rabbitMS, rabbitS, rabbitT, wolfMS, wolfS, 11)     
+            plot(wolfCount, rabbitCount, rabbitMS, rabbitS, rabbitT, wolfMS, wolfS, REPORT_ID)
+            indent['id'] = REPORT_ID + 1
+            with open ('ident.json', 'w') as jsonFile:
+                json.dump(indent, jsonFile)
+            report_name = 'report_' + str(REPORT_ID) + '.csv'
+            os.rename('report.csv', report_name)
 
 main()
