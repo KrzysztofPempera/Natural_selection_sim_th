@@ -40,7 +40,6 @@ class animal(object):
     def normalize(self, v):
         norm = np.linalg.norm(v)
         if norm == 0:
-            print("0 norm exception")
             return v
         return v / norm
 

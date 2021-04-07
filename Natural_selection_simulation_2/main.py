@@ -35,9 +35,9 @@ pg.init()
 
 clock = pg.time.Clock()
 screen = pg.display.set_mode([WIDTH,HEIGHT])
-pg.display.set_caption("Simulation")
-bg = pg.image.load('backgroundForest.png')
-screen.blit(bg,(0,0))
+#pg.display.set_caption("Simulation")
+#bg = pg.image.load('backgroundForest.png')
+#screen.blit(bg,(0,0))
 
 days = 0
 wolfCount = []
@@ -201,7 +201,7 @@ def day():
             
         animalBehavior(wolf, rabbits)
 
-    drawScreen(screen)
+    #drawScreen(screen)
 
 
 def night_3():
@@ -220,7 +220,7 @@ def night_2():
         animal.moveBackToDen()
         if animal.getPosition() == animal.den.getPosition():
             returningAnimals.remove(animal)
-    drawScreen(screen)
+    #drawScreen(screen)
 
 def night_1():
     global rabbits, wolfs, objectsIndex, indexMap, objectsDictionary, rabbitDens, returningAnimals
@@ -281,8 +281,8 @@ def night_1():
             wolf.den.animals.append(wolf)
             returningAnimals.append(wolf)
 
-    createFood(200)
-    drawScreen(screen)
+    createFood(150)
+    #drawScreen(screen)
 
 
 def report(day, wolfCount, rabbitCount, foodCount, rMS, rS, rT, wMS, wS):
@@ -299,7 +299,9 @@ def night_0():
     foodC = len(food)
     wMS = 0
     wS = 0
-
+    rMS = 0
+    rS = 0
+    rT = 0
     temp = 0
     if rabbits:
         for rabbit in rabbits:
@@ -342,7 +344,7 @@ def night_0():
     wolfS.append(wS)
 
 def main():
-    global turn, days, objectsIndex, indexMap, objectsDictionary, returningAnimals, wolfCount, rabbitCount, foodCount, rabbitMS, rabbitS, rabbitT, wolfMS, wolfS, REPORT_ID, indent
+    global turn, days, objectsIndex, indexMap, objectsDictionary, returningAnimals, wolfCount, rabbitCount, foodCount, rabbitMS, rabbitS, rabbitT, wolfMS, wolfS, REPORT_ID, indent, wolfs, rabbits
     running = True
 
     while running:
@@ -353,7 +355,6 @@ def main():
             clock.tick(SPEED)
             day()
             turn += 1
-            print (turn)
 
         days += 1 
         night_0()
@@ -362,7 +363,7 @@ def main():
             clock.tick(SPEED)
             night_2()
         night_3()
-
+        print("DAY: ",days)
         turn = 1
         #if turn == 50:
         #    screen.blit(bg.image , food[1].rect, food[1].rect)
@@ -373,7 +374,7 @@ def main():
             if event.type == pg.QUIT:
                 pg.quit()
                 sys.exit("quit")
-        if days == 2:
+        if days == 2 or len(wolfs) == 0 or len(rabbits)==0:
             running = False
             pg.quit()
             plot(wolfCount, rabbitCount, rabbitMS, rabbitS, rabbitT, wolfMS, wolfS, REPORT_ID)
