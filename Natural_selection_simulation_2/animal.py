@@ -277,4 +277,6 @@ class animal(object):
                 self.wander(pathMap)
             
         self.energy -= ms
+        if self.energy < 0:
+            self.energy = -1
                         

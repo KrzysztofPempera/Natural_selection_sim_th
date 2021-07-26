@@ -296,7 +296,7 @@ def night_0():
 
     rabbitC = len(rabbits)
     wolfC = len(wolfs)
-    foodC = len(food)
+    foodC = int(len(food)/100)
     wMS = 0
     wS = 0
     rMS = 0
@@ -364,6 +364,8 @@ def main():
             night_2()
         night_3()
         print("DAY: ",days)
+        print("wolf count: ", len(wolfs))
+        print("rabbit count: ", len(rabbits))
         turn = 1
         #if turn == 50:
         #    screen.blit(bg.image , food[1].rect, food[1].rect)
@@ -374,10 +376,10 @@ def main():
             if event.type == pg.QUIT:
                 pg.quit()
                 sys.exit("quit")
-        if days == 2 or len(wolfs) == 0 or len(rabbits)==0:
+        if days == 200 or len(wolfs) == 0 or len(rabbits)==0:
             running = False
             pg.quit()
-            plot(wolfCount, rabbitCount, rabbitMS, rabbitS, rabbitT, wolfMS, wolfS, REPORT_ID)
+            plot(foodCount, wolfCount, rabbitCount, rabbitMS, rabbitS, rabbitT, wolfMS, wolfS, REPORT_ID)
             indent['id'] = REPORT_ID + 1
             with open ('ident.json', 'w') as jsonFile:
                 json.dump(indent, jsonFile)
